@@ -6,8 +6,8 @@
  * @package   Craft Like
  * @author    Benjamin David
  * @copyright Copyright (c) 2013, Dukt
- * @license   http://dukt.net/craft/like/docs#license
  * @link      http://dukt.net/craft/like/
+ * @license   http://dukt.net/craft/like/docs/license
  */
 
 namespace Craft;
