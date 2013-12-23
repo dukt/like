@@ -23,4 +23,9 @@ class LikeVariable
     {
     	return craft()->like->getLikes($elementType);
     }
+
+    public function getUserLikes($elementType = null, $userId = null)
+    {
+        return craft()->like->getUserLikes($elementType, $userId);
+    }
 }

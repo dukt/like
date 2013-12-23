@@ -1,0 +1,45 @@
+{% extends "like/_layout" %}
+
+{% block main %}
+
+    <div class="col-md-12">
+        <h1>Like Users</h1>
+
+        {% if not currentUser %}
+            <p>You must be <a href="{{url('like/login')}}">logged in</a> in order to start liking elements.</p>
+        {% endif %}
+
+        {% set entries = craft.users.limit(5).find() %}
+
+        <hr>
+
+        {% for entry in entries %}
+            <h2>{{entry.email}}</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
+
+            {% set likes = craft.like.getLikes(entry.id) %}
+
+            <p>
+                <strong>Likes : </strong> {{likes|length}}
+            </p>
+
+            {% for like in likes %}
+                {{like.user.email}}
+                <hr />
+            {% endfor %}
+
+            <p>
+                {% if currentUser %}
+                    {% if craft.like.isLike(entry.id) %}
+                        <a class="btn btn-default" href="{{actionUrl('like/remove', {id:entry.id})}}">Unlike</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{actionUrl('like/add', {id:entry.id})}}">Like</a>
+                    {% endif %}
+                {% else %}
+                    <a class="btn disabled btn-primary" href="#">Like</a>
+                {% endif %}
+            </p>
+        {% endfor %}
+    </div>
+
+{% endblock main %}

@@ -56,60 +56,57 @@ class LikeService extends BaseApplicationComponent
     }
 
 
-    public function getLikesImproved($elementType = null)
+
+    public function getLikes($elementId = null)
     {
+        $likes = array();
+
+
+        // find likes
+
+        $conditions = 'elementId=:elementId';
+
+        $params = array(':elementId' => $elementId);
+
+        $records = LikeRecord::model()->findAll($conditions, $params);
+
+        foreach($records as $record) {
+            array_push($likes, $record);
+        }
+
+        return $likes;
+    }
+
+    public function getUserLikes($elementType = null, $userId = null)
+    {
+        $likes = array();
+
+        if(!$userId && craft()->userSession->isLoggedIn()) {
+                $userId = craft()->userSession->getUser()->id;
+        }
+
+        if(!$userId) {
+            return $likes;
+        }
+
+
+        // find likes
+
         $conditions = 'userId=:userId';
 
         $params = array(
-            ':userId' => craft()->userSession->getUser()->id
+            ':userId' => $userId
         );
 
         $records = LikeRecord::model()->findAll($conditions, $params);
 
-        return $records;
-    }
+        foreach($records as $record) {
 
-    public function getLikes($elementType = null)
-    {
-        $conditions = 'userId=:userId';
+            $likeElement = craft()->elements->getElementById($record->elementId, $elementType);
 
-        $params = array(
-            ':userId' => craft()->userSession->getUser()->id
-        );
-
-        $likes = array();
-
-        switch($elementType) {
-            case "User":
-
-                $records = LikeRecord::model()->findAll($conditions, $params);
-
-                foreach($records as $record) {
-
-                    if($record->element->type == $elementType) {
-                        $likeElement = craft()->users->getUserById($record->elementId);
-
-                        array_push($likes, $likeElement);
-                    }
-                }
-
-                break;
-
-            case "Entry":
-
-                $records = LikeRecord::model()->findAll($conditions, $params);
-
-                foreach($records as $record) {
-
-                    if($record->element->type == $elementType) {
-                        $likeElement = craft()->entries->getEntryById($record->elementId);
-
-                        array_push($likes, $likeElement);
-                    }
-                }
-
-                break;
-
+            if($likeElement) {
+                array_push($likes, $likeElement);
+            }
         }
 
         return $likes;
@@ -117,11 +114,19 @@ class LikeService extends BaseApplicationComponent
 
     public function isLike($elementId)
     {
+        if(craft()->userSession->isLoggedIn()) {
+            $userId = craft()->userSession->getUser()->id;
+        } else {
+            return false;
+        }
+
+        $userId = craft()->userSession->getUser()->id;
+
         $conditions = 'elementId=:elementId and userId=:userId';
 
         $params = array(
             ':elementId' => $elementId,
-            ':userId' => craft()->userSession->getUser()->id
+            ':userId' => $userId
         );
 
         $record = LikeRecord::model()->find($conditions, $params);

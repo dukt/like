@@ -1,0 +1,34 @@
+{% extends "like/_layout" %}
+
+{% block main %}
+
+    <div class="col-md-12">
+        <h1>Login</h1>
+
+        <form method="post" action="" accept-charset="UTF-8">
+            <input type="hidden" name="action" value="users/login">
+            <input type="hidden" name="redirect" value="like">
+
+
+            <div class="form-group">
+                <label for="loginName">Email address</label>
+                <input name="loginName" type="email" class="form-control" id="loginName" placeholder="Enter username or email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input name="password" type="password" class="form-control" id="password">
+            </div>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="rememberMe" value="1">
+                    Remember me
+                </label>
+            </div>
+
+            <p><input type="submit" class="btn btn-primary" value="Login"> &nbsp; <a href="{{ url('login/forgotpassword') }}" class="btn btn-default btn-sm">Forget your password?</a></p>
+        </form>
+    </div>
+
+{% endblock main %}

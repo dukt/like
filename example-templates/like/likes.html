@@ -1,0 +1,58 @@
+{% extends "like/_layout" %}
+
+{% block main %}
+
+    <div class="col-md-12">
+        <h1>Your Likes</h1>
+
+        <hr>
+
+        <h3>Entries</h3>
+
+        {% set entries = craft.like.getUserLikes('Entry') %}
+
+        {% if entries %}
+            <ul>
+                {% for entry in entries %}
+                    <li>{{entry.title}}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't liked any entry yet.</p>
+        {% endif %}
+
+        <hr />
+
+        <h3>Assets</h3>
+
+        {% set assets = craft.like.getUserLikes('Asset') %}
+
+        {% if assets %}
+                {% for asset in assets %}
+                    <img class="thumbnail" src="{{asset.url({width:200, height: 140})}}" />
+                {% endfor %}
+        {% else %}
+            <p>You haven't liked any asset yet.</p>
+        {% endif %}
+
+
+        <hr />
+
+        <h3>Users</h3>
+
+        {% set users = craft.like.getUserLikes('User') %}
+
+        {% if users %}
+            <ul>
+                {% for user in users %}
+
+                    <li>{{user.name}}</li>
+
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't liked any user yet.</p>
+        {% endif %}
+    </div>
+
+{% endblock main %}
