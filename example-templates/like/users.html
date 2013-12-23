@@ -6,7 +6,7 @@
         <h1>Like Users</h1>
 
         {% if not currentUser %}
-            <p>You must be <a href="{{url('like/login')}}">logged in</a> in order to start liking elements.</p>
+            <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
         {% endif %}
 
         {% set entries = craft.users.limit(5).find() %}
@@ -16,17 +16,6 @@
         {% for entry in entries %}
             <h2>{{entry.email}}</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
-
-            {% set likes = craft.like.getLikes(entry.id) %}
-
-            <p>
-                <strong>Likes : </strong> {{likes|length}}
-            </p>
-
-            {% for like in likes %}
-                {{like.user.email}}
-                <hr />
-            {% endfor %}
 
             <p>
                 {% if currentUser %}
@@ -39,6 +28,27 @@
                     <a class="btn disabled btn-primary" href="#">Like</a>
                 {% endif %}
             </p>
+
+            {% set likes = craft.like.getLikes(entry.id) %}
+
+            {% if likes|length == 0 %}
+                <h4>0 likes</h4>
+            {% else %}
+
+                <h4>
+                    <strong>{{likes|length}} like{{(likes|length > 1 ? 's':'')}} by... </strong>
+                </h4>
+
+                <ul>
+                    {% for like in likes %}
+                        <li>{{like.user.email}}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if not loop.last %}
+                <hr />
+            {% endif %}
         {% endfor %}
     </div>
 

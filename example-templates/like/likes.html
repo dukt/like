@@ -5,6 +5,10 @@
     <div class="col-md-12">
         <h1>Your Likes</h1>
 
+        {% if not currentUser %}
+            <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
+        {% endif %}
+
         <hr>
 
         <h3>Entries</h3>

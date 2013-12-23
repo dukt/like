@@ -6,7 +6,7 @@
         <h1>Like Assets</h1>
 
         {% if not currentUser %}
-            <p>You must be <a href="{{url('like/login')}}">logged in</a> in order to start liking elements.</p>
+            <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
         {% endif %}
 
         {% set assets = craft.assets.limit(5).find() %}

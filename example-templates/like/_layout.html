@@ -42,10 +42,12 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="{{ url('like/likes') }}">Your Likes</a></li>
+
                 {% if currentUser is null %}
                     <li><a href="{{ url('like/login') }}">Login</a></li>
                 {% else %}
-                    <li><a href="{{ url('like/likes') }}">Your Likes</a></li>
                     <li><a href="{{ url('logout') }}">Logout</a></li>
                 {% endif %}
             </ul>
