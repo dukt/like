@@ -11,52 +11,60 @@
 
         <hr>
 
-        <h3>Entries</h3>
-
-        {% set entries = craft.like.getUserLikes('Entry') %}
-
-        {% if entries %}
-            <ul>
-                {% for entry in entries %}
-                    <li>{{entry.title}}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>You haven't liked any entry yet.</p>
-        {% endif %}
-
-        <hr />
-
-        <h3>Assets</h3>
-
-        {% set assets = craft.like.getUserLikes('Asset') %}
-
-        {% if assets %}
-                {% for asset in assets %}
-                    <img class="thumbnail" src="{{asset.url({width:200, height: 140})}}" />
-                {% endfor %}
-        {% else %}
-            <p>You haven't liked any asset yet.</p>
-        {% endif %}
+        <div class="row">
+            <div class="col-sm-4">
 
 
-        <hr />
+                {% set entries = craft.like.getUserLikes('Entry') %}
 
-        <h3>Users</h3>
+                <h3>Entries <small>{{entries|length}}</small></h3>
 
-        {% set users = craft.like.getUserLikes('User') %}
+                {% if entries %}
+                    <ul>
+                        {% for entry in entries %}
+                            <li>{{entry.title}}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>You haven't liked any entry yet.</p>
+                {% endif %}
+            </div>
 
-        {% if users %}
-            <ul>
-                {% for user in users %}
+            <div class="col-sm-4">
 
-                    <li>{{user.name}}</li>
+                {% set assets = craft.like.getUserLikes('Asset') %}
 
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>You haven't liked any user yet.</p>
-        {% endif %}
+                <h3>Assets <small>{{assets|length}}</small></h3>
+
+                {% if assets %}
+                        {% for asset in assets %}
+                            <img class="thumbnail" src="{{asset.url({width:200, height: 140})}}" />
+                        {% endfor %}
+                {% else %}
+                    <p>You haven't liked any asset yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="col-sm-4">
+
+                {% set users = craft.like.getUserLikes('User') %}
+
+                <h3>Users <small>{{users|length}}</small></h3>
+
+                {% if users %}
+                    <ul>
+                        {% for user in users %}
+
+                            <li>{{user.name}}</li>
+
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>You haven't liked any user yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 
 {% endblock main %}
