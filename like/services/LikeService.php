@@ -34,6 +34,15 @@ class LikeService extends BaseApplicationComponent
             $record->userId = $userId;
             $record->save();
 
+
+            // event
+
+            $element = craft()->elements->getElementById($elementId);
+
+            $this->onAddLike(new Event($this, array(
+                'element' => $element
+            )));
+
         } else {
             // already a fav
         }
@@ -136,5 +145,10 @@ class LikeService extends BaseApplicationComponent
         }
 
         return false;
+    }
+
+    public function onAddLike(Event $event)
+    {
+        $this->raiseEvent('onAddLike', $event);
     }
 }
