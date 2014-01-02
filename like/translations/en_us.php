@@ -4,6 +4,7 @@ return array(
 
     // Like Entries
 
+    "like.likeentries_setting_label" => "Notify me when someone likes my assets",
     "like.likeentries_heading" => "When someone likes an entry:",
     "like.likeentries_subject" => "Someone has liked one of your entries",
     "like.likeentries_body"    => "A user has liked one of your entries :
@@ -22,7 +23,7 @@ return array(
 
     // LikesMe
 
-    "like.likeme_heading" => "When someone is getting liked:",
-    "like.likeme_subject" => "Someone likes you",
-    "like.likeme_body"    => "{{user.username}} likes you.",
+    "like.likesme_heading" => "When someone is getting liked:",
+    "like.likesme_subject" => "Someone likes you",
+    "like.likesme_body"    => "{{user.username}} likes you.",
 );
