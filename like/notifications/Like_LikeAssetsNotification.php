@@ -1,19 +1,14 @@
 <?php
 
-/**
- * Craft Like by Dukt
- *
- * @package   Craft Like
- * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/like/
- * @license   http://dukt.net/craft/like/docs/license
- */
-
 namespace Craft;
 
 class Like_LikeAssetsNotification extends BaseNotification
 {
+    public function event()
+    {
+        return 'like.addLike';
+    }
+
     /**
      * Label of userSettings checkbox
      */
@@ -22,11 +17,10 @@ class Like_LikeAssetsNotification extends BaseNotification
         return "Notify me when someone likes my assets";
     }
 
-
     /**
-     * Notification Action
+     * Send Notification
      */
-    public function getAction()
+    public function send()
     {
         // Notify me when someone likes my content
 
@@ -44,34 +38,15 @@ class Like_LikeAssetsNotification extends BaseNotification
                 return;
             }
 
-            $toUser = $element->author;
+            $to = $element->author;
 
-            $notify = craft()->notifications->userHasNotification($toUser, $this->getHandle());
 
-            if($notify) {
+            // send
 
-                // send email
+            $variables['user'] = $liker;
+            $variables['asset'] = $element;
 
-                $emailModel = new EmailModel;
-
-                $emailModel->toEmail = $toUser->email;
-
-                $emailModel->subject = 'Someone has liked one of your entries';
-                $emailModel->htmlBody = "
-                A user has like one of your entries :
-                <br />
-                - user : {{user.email}}
-                <br />
-                - entry : {{entry.id}}
-                <br /><br />
-
-                ";
-
-                $variables['user'] = $liker;
-                $variables['entry'] = $element;
-
-                craft()->email->sendEmail($emailModel, $variables);
-            }
+            craft()->notifications->sendNotification($this->getHandle(), $to, $variables);
         });
     }
 }

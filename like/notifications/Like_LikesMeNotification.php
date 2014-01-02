@@ -22,10 +22,11 @@ class Like_LikesMeNotification extends BaseNotification
         return "Notify me when someone likes me";
     }
 
+
     /**
-     * Notification Action
+     * Send Notification
      */
-    public function getAction()
+    public function send()
     {
         // Notify me when someone likes my content
 
@@ -43,34 +44,14 @@ class Like_LikesMeNotification extends BaseNotification
                 return;
             }
 
-            $toUser = $element->author;
+            $to = $element;
 
-            $notify = craft()->notifications->userHasNotification($toUser, $this->getHandle());
 
-            if($notify) {
+            // send
 
-                // send email
+            $variables['user'] = $liker;
 
-                $emailModel = new EmailModel;
-
-                $emailModel->toEmail = $toUser->email;
-
-                $emailModel->subject = 'Someone has liked one of your entries';
-                $emailModel->htmlBody = "
-                A user has like one of your entries :
-                <br />
-                - user : {{user.email}}
-                <br />
-                - entry : {{entry.id}}
-                <br /><br />
-
-                ";
-
-                $variables['user'] = $liker;
-                $variables['entry'] = $element;
-
-                craft()->email->sendEmail($emailModel, $variables);
-            }
+            craft()->notifications->sendNotification($this->getHandle(), $to, $variables);
         });
     }
 }
