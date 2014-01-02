@@ -11,13 +11,6 @@ return array(
                                   "{{(entry.url is defined ? entry.url : 'Entry ID:'~entry.id)}}"
 
 
-    // Like Assets
-
-    "like.likeassets_heading" => "When someone likes an asset:",
-    "like.likeassets_subject" => "Someone has liked one of your assets",
-    "like.likeassets_body"    => "{{user.friendlyName}} has liked one of your assets :\n\n".
-                                 "{{(asset.url is defined ? asset.url : 'Asset ID:'~asset.id)}}",
-
 
     // LikesMe
 
