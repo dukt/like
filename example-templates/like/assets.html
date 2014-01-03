@@ -1,0 +1,43 @@
+{% extends "like/_layout" %}
+
+{% block main %}
+
+    <div class="col-md-12">
+        <h1>Assets</h1>
+
+        {% if not currentUser %}
+            <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
+        {% endif %}
+
+        {% set assets = craft.assets.limit(5).find() %}
+
+        <hr>
+
+        <div class="row">
+            {% for asset in assets %}
+
+                <div class="col-sm-6">
+                    <img class="img-responsive thumbnail" src="{{asset.url({width:500, height:300})}}" />
+                    <div class="caption">
+
+                        <p>
+                            {% if currentUser %}
+                                {% if craft.like.isLike(asset.id) %}
+                                    <a class="btn btn-default" href="{{actionUrl('like/remove', {id:asset.id})}}">Unlike</a>
+                                {% else %}
+                                    <a class="btn btn-primary" href="{{actionUrl('like/add', {id:asset.id})}}">Like</a>
+                                {% endif %}
+                            {% else %}
+                                <a class="btn disabled btn-primary" href="#">Like</a>
+                            {% endif %}
+                            <br />
+                            <br />
+                        </p>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock main %}
