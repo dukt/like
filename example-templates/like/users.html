@@ -9,12 +9,14 @@
             <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
         {% endif %}
 
-        {% set entries = craft.users.limit(5).find() %}
+        {% set entries = craft.users.find() %}
 
         <hr>
 
         {% for entry in entries %}
-            <h2>{{entry.email}}</h2>
+
+            <h2>{{entry.fullName}}</h2>
+
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
 
             <p>

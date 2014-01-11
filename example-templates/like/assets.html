@@ -9,7 +9,7 @@
             <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
         {% endif %}
 
-        {% set assets = craft.assets.limit(5).find() %}
+        {% set assets = craft.assets.find() %}
 
         <hr>
 
@@ -30,12 +30,23 @@
                             {% else %}
                                 <a class="btn disabled btn-primary" href="#">Like</a>
                             {% endif %}
-                            <br />
-                            <br />
+
+                            {% set likes = craft.like.getLikes(asset.id) %}
+
+                            {% if likes|length == 0 %}
+                                0 likes
+                            {% else %}
+                                {{likes|length}} like{{(likes|length > 1 ? 's':'')}}
+                            {% endif %}
+
                         </p>
 
                     </div>
                 </div>
+
+                {% if loop.index is divisible by(2) %}
+                    <div class="clearfix"></div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
