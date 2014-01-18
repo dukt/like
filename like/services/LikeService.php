@@ -46,6 +46,8 @@ class LikeService extends BaseApplicationComponent
         } else {
             // already a fav
         }
+
+        return true;
     }
 
     public function remove($elementId, $userId)
@@ -59,12 +61,13 @@ class LikeService extends BaseApplicationComponent
 
         $record = LikeRecord::model()->find($conditions, $params);
 
-        if ($record) {
+        if ($record)
+        {
             $record->delete();
         }
+
+        return true;
     }
-
-
 
     public function getLikes($elementId = null)
     {

@@ -16,12 +16,28 @@ class LikeController extends BaseController
 {
     public function actionAdd(array $variables = array())
     {
-    	$elementId = craft()->request->getParam('id');
-    	$userId = craft()->userSession->getUser()->id;
+        $elementId = craft()->request->getParam('id');
 
-    	craft()->like->add($elementId, $userId);
+        $userId = craft()->userSession->getUser()->id;
 
-    	$this->redirect($_SERVER['HTTP_REFERER']);
+        $response = craft()->like->add($elementId, $userId);
+
+        if (craft()->request->isAjaxRequest()) {
+
+            if ($response) {
+                $this->returnJson(array(
+                    'success' => true
+                ));
+            }
+            else
+            {
+                $this->returnErrorJson(Craft::t("Couldn't add like."));
+            }
+        }
+        else
+        {
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 
     public function actionRemove(array $variables = array())
@@ -29,8 +45,23 @@ class LikeController extends BaseController
     	$elementId = craft()->request->getParam('id');
     	$userId = craft()->userSession->getUser()->id;
 
-    	craft()->like->remove($elementId, $userId);
+    	$response = craft()->like->remove($elementId, $userId);
 
-    	$this->redirect($_SERVER['HTTP_REFERER']);
+        if (craft()->request->isAjaxRequest()) {
+
+            if ($response) {
+                $this->returnJson(array(
+                    'success' => true
+                ));
+            }
+            else
+            {
+                $this->returnErrorJson(Craft::t("Couldn't remove like."));
+            }
+        }
+        else
+        {
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 }
