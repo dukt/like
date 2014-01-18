@@ -5,7 +5,7 @@
  *
  * @package   Craft Like
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
+ * @copyright Copyright (c) 2014, Dukt
  * @link      http://dukt.net/craft/like/
  * @license   http://dukt.net/craft/like/docs/license
  */
