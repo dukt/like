@@ -53,4 +53,34 @@
         {% endfor %}
     </div>
 
+
+    <!-- Javascript -->
+
+    {#
+
+    Coming soon
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    <script>
+        $('.like-btn').click(function(e) {
+            $element = $(this);
+            $.post("{{actionUrl('like/add')}}", {id:$element.data('id')}, function() {
+                console.log('added like for element : '+$element.data('id'));
+            });
+
+            e.preventDefault();
+        });
+
+        $('.unlike-btn').click(function(e) {
+            $element = $(this);
+            $.post("{{actionUrl('like/remove')}}", {id:$element.data('id')}, function() {
+                console.log('remove like for element : '+$element.data('id'));
+            });
+
+            e.preventDefault();
+        });
+    </script>
+    #}
+
 {% endblock main %}
