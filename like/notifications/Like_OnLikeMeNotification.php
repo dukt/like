@@ -37,4 +37,9 @@ class Like_OnLikeMeNotification extends BaseNotification
 
         craft()->notifications->sendNotification($this->getHandle(), $user, $variables);
     }
+
+    public function getUrl($notification)
+    {
+        return UrlHelper::getUrl('users/'.$notification->contextUserId);
+    }
 }
