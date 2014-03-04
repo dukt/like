@@ -39,14 +39,4 @@ class Like_OnLikeEntriesNotification extends BaseNotification
 
         craft()->notifications->sendNotification($this->getHandle(), $user, $variables);
     }
-
-    public function getUrl($notification)
-    {
-        $element = craft()->elements->getElementById($notification->contextElementId);
-
-        if(method_exists($element, 'getCpEditUrl'))
-        {
-            return $element->getCpEditUrl();
-        }
-    }
 }
