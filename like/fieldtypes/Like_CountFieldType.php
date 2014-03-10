@@ -52,13 +52,18 @@ class Like_CountFieldType extends BaseFieldType
      */
     public function modifyElementsQuery(DbCommand $query, $value)
     {
+        $handle = $this->model->handle;
+
+        $query->addSelect('count(likes.id) AS '.craft()->content->fieldColumnPrefix.$handle);
+        $query->leftJoin('likes likes', 'likes.elementId = elements.id');
+    }
+
 
         // $handle = $this->model->handle;
         // $query->andWhere(DbHelper::parseDateParam('content.'.craft()->content->fieldColumnPrefix.$handle, $value, $query->params));
 
         // var_dump($value);
         // die('test');
-        $handle = $this->model->handle;
 
         // $query
         //     ->addSelect('entries.sectionId, entries.typeId, entries.authorId, entries.root, entries.lft, entries.rgt, entries.depth, entries.postDate, entries.expiryDate, entries_i18n.slug')
@@ -77,9 +82,6 @@ class Like_CountFieldType extends BaseFieldType
         // ->leftJoin('structures structures', 'structures.id = categorygroups.structureId')
 
 //        $query->from('likes');
-
-        $query->addSelect('count(likes.id) AS '.craft()->content->fieldColumnPrefix.$handle);
-        $query->leftJoin('likes likes', 'likes.elementId = elements.id');
         //$query->count('likes.id as '.'content.'.craft()->content->fieldColumnPrefix.$handle);
         //$query->count('likes.id');
 
@@ -89,6 +91,4 @@ class Like_CountFieldType extends BaseFieldType
         // FROM craft_likes AS l
         // LEFT JOIN craft_content AS c ON l.elementId = c.elementId
         // GROUP BY l.elementId
-
-    }
 }
