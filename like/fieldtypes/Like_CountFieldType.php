@@ -36,6 +36,13 @@ class Like_CountFieldType extends BaseFieldType
     }
 
 
+    public function prepValue($value)
+    {
+        $likes = craft()->like->getLikes($this->element->id);
+
+        return count($likes);
+    }
+
     /**
      * Modifies an element query that's filtering by this field.
      *
@@ -45,7 +52,12 @@ class Like_CountFieldType extends BaseFieldType
      */
     public function modifyElementsQuery(DbCommand $query, $value)
     {
-        var_dump($value);
+
+        // $handle = $this->model->handle;
+        // $query->andWhere(DbHelper::parseDateParam('content.'.craft()->content->fieldColumnPrefix.$handle, $value, $query->params));
+
+        // var_dump($value);
+        // die('test');
         $handle = $this->model->handle;
 
         // $query
@@ -54,8 +66,29 @@ class Like_CountFieldType extends BaseFieldType
         //     ->join('entries_i18n entries_i18n', 'entries_i18n.entryId = elements.id')
         //     ->andWhere(array('or', 'entries.lft IS NULL', 'entries.lft != 1'))
         //     ->andWhere('entries_i18n.locale = elements_i18n.locale');
-        $query->join('likes likes', 'likes.id = elements.id');
-        $query->count('likes.id as '.'content.'.craft()->content->fieldColumnPrefix.$handle);
+        // $query->order('elements.id DESC');
+        // $query->join('likes likes', 'likes.id = elements.id');
+        // $query->join('likes likes', 'likes.id = elements.id');
+
+        // $query->count('likes.id as '.'content.'.craft()->content->fieldColumnPrefix.$handle);
         // $query->andWhere(DbHelper::parseParam('content.'.craft()->content->fieldColumnPrefix.$handle, $value, $query->params));
+
+        // ->addSelect('categories.groupId')
+        // ->leftJoin('structures structures', 'structures.id = categorygroups.structureId')
+
+//        $query->from('likes');
+
+        $query->addSelect('count(likes.id) AS '.craft()->content->fieldColumnPrefix.$handle);
+        $query->leftJoin('likes likes', 'likes.elementId = elements.id');
+        //$query->count('likes.id as '.'content.'.craft()->content->fieldColumnPrefix.$handle);
+        //$query->count('likes.id');
+
+
+
+        // SELECT c.title, l.elementId, COUNT(*) AS totalLikes
+        // FROM craft_likes AS l
+        // LEFT JOIN craft_content AS c ON l.elementId = c.elementId
+        // GROUP BY l.elementId
+
     }
 }

@@ -9,7 +9,7 @@
             <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
         {% endif %}
 
-        {% set entries = craft.entries.order('totalLikes desc').find() %}
+        {% set entries = craft.entries({ totalLikes:'>= 0' }).order('totalLikes desc') %}
 
         <hr>
 
