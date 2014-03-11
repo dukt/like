@@ -6,8 +6,8 @@
  * @package   Craft Like
  * @author    Benjamin David
  * @copyright Copyright (c) 2014, Dukt
- * @link      http://dukt.net/craft/like/
- * @license   http://dukt.net/craft/like/docs/license
+ * @link      https://dukt.net/craft/like/
+ * @license   https://dukt.net/craft/like/docs/license
  */
 
 namespace Craft;
@@ -44,7 +44,7 @@ class Like_CountFieldType extends BaseFieldType
     }
 
     /**
-     * Modifies an element query that's filtering by this field.
+     * Modifies an element query
      *
      * @param DbCommand $query
      * @param mixed     $value
@@ -57,38 +57,4 @@ class Like_CountFieldType extends BaseFieldType
         $query->addSelect('count(likes.id) AS '.craft()->content->fieldColumnPrefix.$handle);
         $query->leftJoin('likes likes', 'likes.elementId = elements.id');
     }
-
-
-        // $handle = $this->model->handle;
-        // $query->andWhere(DbHelper::parseDateParam('content.'.craft()->content->fieldColumnPrefix.$handle, $value, $query->params));
-
-        // var_dump($value);
-        // die('test');
-
-        // $query
-        //     ->addSelect('entries.sectionId, entries.typeId, entries.authorId, entries.root, entries.lft, entries.rgt, entries.depth, entries.postDate, entries.expiryDate, entries_i18n.slug')
-        //     ->join('entries entries', 'entries.id = elements.id')
-        //     ->join('entries_i18n entries_i18n', 'entries_i18n.entryId = elements.id')
-        //     ->andWhere(array('or', 'entries.lft IS NULL', 'entries.lft != 1'))
-        //     ->andWhere('entries_i18n.locale = elements_i18n.locale');
-        // $query->order('elements.id DESC');
-        // $query->join('likes likes', 'likes.id = elements.id');
-        // $query->join('likes likes', 'likes.id = elements.id');
-
-        // $query->count('likes.id as '.'content.'.craft()->content->fieldColumnPrefix.$handle);
-        // $query->andWhere(DbHelper::parseParam('content.'.craft()->content->fieldColumnPrefix.$handle, $value, $query->params));
-
-        // ->addSelect('categories.groupId')
-        // ->leftJoin('structures structures', 'structures.id = categorygroups.structureId')
-
-//        $query->from('likes');
-        //$query->count('likes.id as '.'content.'.craft()->content->fieldColumnPrefix.$handle);
-        //$query->count('likes.id');
-
-
-
-        // SELECT c.title, l.elementId, COUNT(*) AS totalLikes
-        // FROM craft_likes AS l
-        // LEFT JOIN craft_content AS c ON l.elementId = c.elementId
-        // GROUP BY l.elementId
 }
