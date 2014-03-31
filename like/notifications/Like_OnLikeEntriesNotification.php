@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Craft Like by Dukt
+ *
+ * @package   Craft Like
+ * @author    Benjamin David
+ * @copyright Copyright (c) 2014, Dukt
+ * @link      https://dukt.net/craft/like/
+ * @license   https://dukt.net/craft/like/docs/license
+ */
+
 namespace Craft;
 
 class Like_OnLikeEntriesNotification extends BaseNotification
