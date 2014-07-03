@@ -30,21 +30,33 @@ class Like_OnLikeMeNotification extends BaseNotification
             return;
         }
 
+        // recipient
         $recipient = $element;
 
-        $variables['recipient'] = $recipient;
-        $variables['user'] = $user;
+        // data
+        $data = array(
+            'elementId' => $element->id,
+            'userId' => $user->id
+        );
 
-        craft()->notifications->sendNotification($this->getHandle(), $recipient, $variables);
+        // send notification
+        craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
     }
 
-    // public function actionMarkAsRead();
-    // public function actionArchive();
-    // public function actionView();
-    // public function actionCpEdit();
-
-    public function getOpenCpUrl()
+    public function getVariables($data = array())
     {
-        return "{{ entry.cpEditUrl }}";
+        $variables = $data;
+
+        if(!empty($data['elementId']))
+        {
+            $variables['element'] = craft()->elements->getElementById($data['elementId']);
+        }
+
+        if(!empty($data['userId']))
+        {
+            $variables['user'] = craft()->elements->getElementById($data['userId']);
+        }
+
+        return $variables;
     }
 }

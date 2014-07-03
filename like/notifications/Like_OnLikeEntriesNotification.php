@@ -30,7 +30,6 @@ class Like_OnLikeEntriesNotification extends BaseNotification
             return;
         }
 
-
         // data
         $data = array(
             'entryId' => $element->id,
@@ -39,10 +38,6 @@ class Like_OnLikeEntriesNotification extends BaseNotification
 
         // recipient
         $recipient = $element->author;
-
-        // // variables
-        // $variables = $this->getVariables($data);
-        // $variables['recipient'] = $recipient;
 
         // send notification
         craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
@@ -63,15 +58,5 @@ class Like_OnLikeEntriesNotification extends BaseNotification
         }
 
         return $variables;
-    }
-
-    public function defaultOpenUrl()
-    {
-        return "{{ entry.url }}";
-    }
-
-    public function defaultOpenCpUrl()
-    {
-        return "{{ entry.cpEditUrl }}";
     }
 }
