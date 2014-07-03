@@ -18,9 +18,9 @@ class Like_OnLikeEntriesNotification extends BaseNotification
      */
     public function action(Event $event)
     {
-        $contextUser = craft()->userSession->getUser();
+        $user = craft()->userSession->getUser();
 
-        if(!$contextUser) {
+        if(!$user) {
             return;
         }
 
@@ -30,13 +30,48 @@ class Like_OnLikeEntriesNotification extends BaseNotification
             return;
         }
 
-        $user = $element->author;
 
-        $variables['user'] = $user;
-        $variables['contextUser'] = $contextUser;
-        $variables['contextElement'] = $element;
-        $variables['entry'] = $element;
+        // data
+        $data = array(
+            'entryId' => $element->id,
+            'userId' => $user->id
+        );
 
-        craft()->notifications->sendNotification($this->getHandle(), $user, $variables);
+        // recipient
+        $recipient = $element->author;
+
+        // // variables
+        // $variables = $this->getVariables($data);
+        // $variables['recipient'] = $recipient;
+
+        // send notification
+        craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
+    }
+
+    public function getVariables($data = array())
+    {
+        $variables = $data;
+
+        if(!empty($data['entryId']))
+        {
+            $variables['entry'] = craft()->elements->getElementById($data['entryId']);
+        }
+
+        if(!empty($data['userId']))
+        {
+            $variables['user'] = craft()->elements->getElementById($data['userId']);
+        }
+
+        return $variables;
+    }
+
+    public function defaultOpenUrl()
+    {
+        return "{{ entry.url }}";
+    }
+
+    public function defaultOpenCpUrl()
+    {
+        return "{{ entry.cpEditUrl }}";
     }
 }

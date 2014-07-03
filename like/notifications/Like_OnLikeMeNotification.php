@@ -18,9 +18,9 @@ class Like_OnLikeMeNotification extends BaseNotification
      */
     public function action(Event $event)
     {
-        $contextUser = craft()->userSession->getUser();
+        $user = craft()->userSession->getUser();
 
-        if(!$contextUser) {
+        if(!$user) {
             return;
         }
 
@@ -30,11 +30,21 @@ class Like_OnLikeMeNotification extends BaseNotification
             return;
         }
 
-        $user = $element;
+        $recipient = $element;
 
+        $variables['recipient'] = $recipient;
         $variables['user'] = $user;
-        $variables['contextUser'] = $contextUser;
 
-        craft()->notifications->sendNotification($this->getHandle(), $user, $variables);
+        craft()->notifications->sendNotification($this->getHandle(), $recipient, $variables);
+    }
+
+    // public function actionMarkAsRead();
+    // public function actionArchive();
+    // public function actionView();
+    // public function actionCpEdit();
+
+    public function getOpenCpUrl()
+    {
+        return "{{ entry.cpEditUrl }}";
     }
 }
