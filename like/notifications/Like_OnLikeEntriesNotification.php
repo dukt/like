@@ -12,51 +12,66 @@ class Like_OnLikeEntriesNotification extends BaseNotification
         return 'like.addLike';
     }
 
-
     /**
      * Action : Send a notification when someone likes my entries
      */
     public function action(Event $event)
     {
-        $user = craft()->userSession->getUser();
+        if($event->params['like']->getElement()->elementType == 'Entry')
+        {
+            $data = $this->getDataFromEvent($event);
+            $variables = $this->getVariables($data);
+            $recipient = $variables['entry']->author;
 
-        if(!$user) {
-            return;
+            // send notification
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
         }
-
-        $element = $event->params['element'];
-
-        if($element->elementType != 'Entry') {
-            return;
-        }
-
-        // data
-        $data = array(
-            'entryId' => $element->id,
-            'userId' => $user->id
-        );
-
-        // recipient
-        $recipient = $element->author;
-
-        // send notification
-        craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
     }
 
+    /**
+     * Get variables
+     */
     public function getVariables($data = array())
     {
-        $variables = $data;
-
-        if(!empty($data['entryId']))
+        if(!empty($data['likeId']))
         {
-            $variables['entry'] = craft()->elements->getElementById($data['entryId']);
-        }
+            $like = craft()->like->getLikeById($data['likeId']);
+            $entry = $like->getElement();
+            $sender = $like->getUser();
 
-        if(!empty($data['userId']))
-        {
-            $variables['user'] = craft()->elements->getElementById($data['userId']);
+            return array(
+                'sender' => $sender,
+                'entry' => $entry,
+                'like' => $like,
+            );
         }
+    }
 
-        return $variables;
+    /**
+     * Get data from event
+     */
+    public function getDataFromEvent(Event $event)
+    {
+        return array(
+            'likeId' => $event->params['like']->id,
+            'entryId' => $event->params['like']->elementId,
+            'senderId' => $event->params['like']->userId
+        );
+    }
+
+    /**
+     * Default Open Url Format
+     */
+    public function defaultOpenUrlFormat()
+    {
+        return '{{entry.url}}';
+    }
+
+    /**
+     * Default Open CP Url Format
+     */
+    public function defaultOpenCpUrlFormat()
+    {
+        return '{{entry.cpEditUrl}}';
     }
 }

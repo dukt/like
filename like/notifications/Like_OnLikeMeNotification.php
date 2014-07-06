@@ -12,51 +12,62 @@ class Like_OnLikeMeNotification extends BaseNotification
         return 'like.addLike';
     }
 
-
     /**
      * Action : Send a notification when someone likes me
      */
     public function action(Event $event)
     {
-        $user = craft()->userSession->getUser();
+        $data = $this->getDataFromEvent($event);
+        $variables = $this->getVariables($data);
+        $recipient = $variables['like']->getElement();
 
-        if(!$user) {
-            return;
+        if($recipient->elementType == 'User')
+        {
+            // send notification
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
         }
-
-        $element = $event->params['element'];
-
-        if($element->elementType != 'User') {
-            return;
-        }
-
-        // recipient
-        $recipient = $element;
-
-        // data
-        $data = array(
-            'elementId' => $element->id,
-            'userId' => $user->id
-        );
-
-        // send notification
-        craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
     }
 
+    /**
+     * Get variables
+     */
     public function getVariables($data = array())
     {
-        $variables = $data;
+        $like = false;
+        $recipient = false;
+        $sender = false;
 
-        if(!empty($data['elementId']))
+        if(!empty($data['likeId']))
         {
-            $variables['element'] = craft()->elements->getElementById($data['elementId']);
+            $like = craft()->like->getLikeById($data['likeId']);
+            $sender = $like->getUser();
         }
 
-        if(!empty($data['userId']))
-        {
-            $variables['user'] = craft()->elements->getElementById($data['userId']);
-        }
+        return array(
+            'sender' => $sender,
+            'like' => $like,
+        );
+    }
 
-        return $variables;
+    /**
+     * Get data from event
+     */
+    public function getDataFromEvent(Event $event)
+    {
+        $like = $event->params['like'];
+        $sender = $like->getUser();
+
+        return array(
+            'likeId' => $like->id,
+            'senderId' => $sender->id
+        );
+    }
+
+    /**
+     * Default Open CP Url Format
+     */
+    public function defaultOpenCpUrlFormat()
+    {
+        return '{{user.cpEditUrl}}';
     }
 }

@@ -25,8 +25,8 @@ class LikeService extends BaseApplicationComponent
 
         $record = LikeRecord::model()->find($conditions, $params);
 
-        if (!$record) {
-
+        if (!$record)
+        {
             // add fav
 
             $record = new LikeRecord;
@@ -34,16 +34,14 @@ class LikeService extends BaseApplicationComponent
             $record->userId = $userId;
             $record->save();
 
-
-            // event
-
-            $element = craft()->elements->getElementById($elementId);
+            $model = LikeModel::populateModel($record);
 
             $this->onAddLike(new Event($this, array(
-                'element' => $element
+                'like' => $model
             )));
-
-        } else {
+        }
+        else
+        {
             // already a fav
         }
 
@@ -63,10 +61,26 @@ class LikeService extends BaseApplicationComponent
 
         if ($record)
         {
+            $model = LikeModel::populateModel($record);
+
             $record->delete();
+
+            $this->onRemoveLike(new Event($this, array(
+                'like' => $model
+            )));
         }
 
         return true;
+    }
+
+    public function getLikeById($id)
+    {
+        $record = LikeRecord::model()->findByPk($id);
+
+        if($record)
+        {
+            return LikeModel::populateModel($record);
+        }
     }
 
     public function getLikes($elementId = null)
@@ -153,5 +167,10 @@ class LikeService extends BaseApplicationComponent
     public function onAddLike(Event $event)
     {
         $this->raiseEvent('onAddLike', $event);
+    }
+
+    public function onRemoveLike(Event $event)
+    {
+        $this->raiseEvent('onRemoveLike', $event);
     }
 }
