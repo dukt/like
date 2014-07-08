@@ -23,8 +23,11 @@ class Like_OnLikeMeNotification extends BaseNotification
 
         if($recipient->elementType == 'User')
         {
+            $sender = $variables['sender'];
+            $relatedElement = $variables['like'];
+
             // send notification
-            craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $sender, $relatedElement, $data);
         }
     }
 
@@ -33,20 +36,16 @@ class Like_OnLikeMeNotification extends BaseNotification
      */
     public function getVariables($data = array())
     {
-        $like = false;
-        $recipient = false;
-        $sender = false;
-
         if(!empty($data['likeId']))
         {
             $like = craft()->like->getLikeById($data['likeId']);
             $sender = $like->getUser();
-        }
 
-        return array(
-            'sender' => $sender,
-            'like' => $like,
-        );
+            return array(
+                'sender' => $sender,
+                'like' => $like,
+            );
+        }
     }
 
     /**

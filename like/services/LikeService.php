@@ -14,12 +14,14 @@ namespace Craft;
 
 class LikeService extends BaseApplicationComponent
 {
-    public function add($elementId, $userId)
+    public function add($likeElementId, $userId)
     {
-        $conditions = 'elementId=:elementId and userId=:userId';
+        $validateContent = false;
+
+        $conditions = 'likeElementId=:likeElementId and userId=:userId';
 
         $params = array(
-            ':elementId' => $elementId,
+            ':likeElementId' => $likeElementId,
             ':userId' => $userId
         );
 
@@ -27,18 +29,31 @@ class LikeService extends BaseApplicationComponent
 
         if (!$record)
         {
-            // add fav
+            $model = new LikeModel();
+            $model->likeElementId = $likeElementId;
+            $model->userId = $userId;
 
             $record = new LikeRecord;
-            $record->elementId = $elementId;
-            $record->userId = $userId;
-            $record->save();
+            $record->likeElementId = $model->likeElementId;
+            $record->userId = $model->userId;
 
-            $model = LikeModel::populateModel($record);
+            $record->validate();
+            $model->addErrors($record->getErrors());
 
-            $this->onAddLike(new Event($this, array(
-                'like' => $model
-            )));
+            if(!$model->hasErrors())
+            {
+                if(craft()->elements->saveElement($model, $validateContent))
+                {
+                    $record->id = $model->id;
+                    $record->save(false);
+
+                    $this->onAddLike(new Event($this, array(
+                        'like' => $model
+                    )));
+
+                    return true;
+                }
+            }
         }
         else
         {
@@ -48,12 +63,12 @@ class LikeService extends BaseApplicationComponent
         return true;
     }
 
-    public function remove($elementId, $userId)
+    public function remove($likeElementId, $userId)
     {
-        $conditions = 'elementId=:elementId and userId=:userId';
+        $conditions = 'likeElementId=:likeElementId and userId=:userId';
 
         $params = array(
-            ':elementId' => $elementId,
+            ':likeElementId' => $likeElementId,
             ':userId' => $userId
         );
 
@@ -63,7 +78,7 @@ class LikeService extends BaseApplicationComponent
         {
             $model = LikeModel::populateModel($record);
 
-            $record->delete();
+            craft()->elements->deleteElementById($record->id);
 
             $this->onRemoveLike(new Event($this, array(
                 'like' => $model
@@ -83,16 +98,16 @@ class LikeService extends BaseApplicationComponent
         }
     }
 
-    public function getLikes($elementId = null)
+    public function getLikes($likeElementId = null)
     {
         $likes = array();
 
 
         // find likes
 
-        $conditions = 'elementId=:elementId';
+        $conditions = 'likeElementId=:likeElementId';
 
-        $params = array(':elementId' => $elementId);
+        $params = array(':likeElementId' => $likeElementId);
 
         $records = LikeRecord::model()->findAll($conditions, $params);
 
@@ -128,7 +143,7 @@ class LikeService extends BaseApplicationComponent
 
         foreach($records as $record) {
 
-            $likeElement = craft()->elements->getElementById($record->elementId, $elementType);
+            $likeElement = craft()->elements->getElementById($record->likeElementId, $elementType);
 
             if($likeElement) {
                 array_push($likes, $likeElement);
@@ -138,7 +153,7 @@ class LikeService extends BaseApplicationComponent
         return $likes;
     }
 
-    public function isLike($elementId)
+    public function isLike($likeElementId)
     {
         if(craft()->userSession->isLoggedIn()) {
             $userId = craft()->userSession->getUser()->id;
@@ -148,10 +163,10 @@ class LikeService extends BaseApplicationComponent
 
         $userId = craft()->userSession->getUser()->id;
 
-        $conditions = 'elementId=:elementId and userId=:userId';
+        $conditions = 'likeElementId=:likeElementId and userId=:userId';
 
         $params = array(
-            ':elementId' => $elementId,
+            ':likeElementId' => $likeElementId,
             ':userId' => $userId
         );
 

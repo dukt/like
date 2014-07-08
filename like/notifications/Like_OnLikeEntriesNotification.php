@@ -21,10 +21,13 @@ class Like_OnLikeEntriesNotification extends BaseNotification
         {
             $data = $this->getDataFromEvent($event);
             $variables = $this->getVariables($data);
+
             $recipient = $variables['entry']->author;
+            $sender = $variables['sender'];
+            $relatedElement = $variables['like'];
 
             // send notification
-            craft()->notifications->sendNotification($this->getHandle(), $recipient, $data);
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $sender, $relatedElement, $data);
         }
     }
 
@@ -36,15 +39,21 @@ class Like_OnLikeEntriesNotification extends BaseNotification
         if(!empty($data['likeId']))
         {
             $like = craft()->like->getLikeById($data['likeId']);
-            $entry = $like->getElement();
-            $sender = $like->getUser();
 
-            return array(
-                'sender' => $sender,
-                'entry' => $entry,
-                'like' => $like,
-            );
+            if($like)
+            {
+                $entry = $like->getElement();
+                $sender = $like->getUser();
+
+                return array(
+                    'sender' => $sender,
+                    'entry' => $entry,
+                    'like' => $like,
+                );
+            }
         }
+
+        return array();
     }
 
     /**
@@ -54,7 +63,7 @@ class Like_OnLikeEntriesNotification extends BaseNotification
     {
         return array(
             'likeId' => $event->params['like']->id,
-            'entryId' => $event->params['like']->elementId,
+            'entryId' => $event->params['like']->likeElementId,
             'senderId' => $event->params['like']->userId
         );
     }

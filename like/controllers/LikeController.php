@@ -16,11 +16,11 @@ class LikeController extends BaseController
 {
     public function actionAdd(array $variables = array())
     {
-        $elementId = craft()->request->getParam('id');
+        $likeElementId = craft()->request->getParam('id');
 
         $userId = craft()->userSession->getUser()->id;
 
-        $response = craft()->like->add($elementId, $userId);
+        $response = craft()->like->add($likeElementId, $userId);
 
         if (craft()->request->isAjaxRequest()) {
 
@@ -42,10 +42,10 @@ class LikeController extends BaseController
 
     public function actionRemove(array $variables = array())
     {
-    	$elementId = craft()->request->getParam('id');
+    	$likeElementId = craft()->request->getParam('id');
     	$userId = craft()->userSession->getUser()->id;
 
-    	$response = craft()->like->remove($elementId, $userId);
+    	$response = craft()->like->remove($likeElementId, $userId);
 
         if (craft()->request->isAjaxRequest()) {
 

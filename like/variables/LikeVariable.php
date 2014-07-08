@@ -14,9 +14,9 @@ namespace Craft;
 
 class LikeVariable
 {
-    public function isLike($elementId)
+    public function isLike($likeElementId)
     {
-        return craft()->like->isLike($elementId);
+        return craft()->like->isLike($likeElementId);
     }
 
     public function getLikes($elementType = null)
