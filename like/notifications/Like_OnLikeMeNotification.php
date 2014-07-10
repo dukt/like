@@ -17,17 +17,18 @@ class Like_OnLikeMeNotification extends BaseNotification
      */
     public function action(Event $event)
     {
-        $data = $this->getDataFromEvent($event);
-        $variables = $this->getVariables($data);
-        $recipient = $variables['like']->getElement();
+        $like = $event->params['like'];
+        $sender = $like->getUser();
+        $recipient = $like->getElement();
 
         if($recipient->elementType == 'User')
         {
-            $sender = $variables['sender'];
-            $relatedElement = $variables['like'];
+            $data = array(
+                'likeId' => $like->id
+            );
 
             // send notification
-            craft()->notifications->sendNotification($this->getHandle(), $recipient, $sender, $relatedElement, $data);
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $sender, $data);
         }
     }
 
@@ -39,27 +40,11 @@ class Like_OnLikeMeNotification extends BaseNotification
         if(!empty($data['likeId']))
         {
             $like = craft()->like->getLikeById($data['likeId']);
-            $sender = $like->getUser();
 
             return array(
-                'sender' => $sender,
                 'like' => $like,
             );
         }
-    }
-
-    /**
-     * Get data from event
-     */
-    public function getDataFromEvent(Event $event)
-    {
-        $like = $event->params['like'];
-        $sender = $like->getUser();
-
-        return array(
-            'likeId' => $like->id,
-            'senderId' => $sender->id
-        );
     }
 
     /**

@@ -63,6 +63,42 @@ class LikeService extends BaseApplicationComponent
         return true;
     }
 
+    public function deleteLikeById($id)
+    {
+        $record = LikeRecord::model()->findByPk($id);
+
+        if ($record)
+        {
+            $like = LikeModel::populateModel($record);
+
+            if(isset(craft()->notifications))
+            {
+                // remove notification related to this like
+
+                $notifications = array();
+
+                $notifications = array_merge($notifications, craft()->notifications->findNotificationsByData('like.onlikeentries', 'likeId', $like->id));
+
+                $notifications = array_merge($notifications, craft()->notifications->findNotificationsByData('like.onlikeme', 'likeId', $like->id));
+
+                foreach($notifications as $notification)
+                {
+                    craft()->notifications->deleteNotificationById($notification->id);
+                }
+            }
+
+            // delete like element
+
+            craft()->elements->deleteElementById($like->id);
+
+            $this->onRemoveLike(new Event($this, array(
+                'like' => $like
+            )));
+        }
+
+        return true;
+    }
+
     public function remove($likeElementId, $userId)
     {
         $conditions = 'likeElementId=:likeElementId and userId=:userId';
@@ -76,13 +112,7 @@ class LikeService extends BaseApplicationComponent
 
         if ($record)
         {
-            $model = LikeModel::populateModel($record);
-
-            craft()->elements->deleteElementById($record->id);
-
-            $this->onRemoveLike(new Event($this, array(
-                'like' => $model
-            )));
+            $this->deleteLikeById($record->id);
         }
 
         return true;
@@ -98,24 +128,33 @@ class LikeService extends BaseApplicationComponent
         }
     }
 
-    public function getLikes($likeElementId = null)
+    public function getLikesByElementId($elementId)
     {
-        $likes = array();
-
-
-        // find likes
-
         $conditions = 'likeElementId=:likeElementId';
 
-        $params = array(':likeElementId' => $likeElementId);
+        $params = array(':likeElementId' => $elementId);
 
         $records = LikeRecord::model()->findAll($conditions, $params);
 
-        foreach($records as $record) {
-            array_push($likes, $record);
-        }
+        return LikeModel::populateModels($records);
+    }
 
-        return $likes;
+    public function getLikes($likeElementId = null)
+    {
+        return $this->getLikesByElementId($likeElementId);
+    }
+
+    public function getLikesByUserId($userId)
+    {
+        $conditions = 'userId=:userId';
+
+        $params = array(
+            ':userId' => $userId
+        );
+
+        $records = LikeRecord::model()->findAll($conditions, $params);
+
+        return LikeModel::populateModels($records);
     }
 
     public function getUserLikes($elementType = null, $userId = null)

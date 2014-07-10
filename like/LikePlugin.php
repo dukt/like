@@ -14,23 +14,48 @@ namespace Craft;
 
 class LikePlugin extends BasePlugin
 {
-    // public function init()
-    // {
-    //     craft()->on('entries.onDeleteEntry', function(Event $event) {
-    //         // delete notifications with entryId
-    //         craft()->notifications->deleteNotifications('entryId', $event->params['entry']->id);
-    //     });
+    public function init()
+    {
+        craft()->on('entries.onBeforeDeleteEntry', function(Event $event) {
 
-    //     craft()->on('users.onDeleteUser', function(Event $event) {
-    //         // delete notifications with senderId
-    //         craft()->notifications->deleteNotifications('senderId', $event->params['user']->id);
-    //     });
+            $entry = $event->params['entry'];
 
-    //     craft()->on('like.onRemoveLike', function(Event $event) {
-    //         // delete notifications with likeId
-    //         craft()->notifications->deleteNotifications('likeId', $event->params['like']->id);
-    //     });
-    // }
+
+            // delete likes related to this entry
+
+            $likes = craft()->like->getLikesByElementId($entry->id);
+
+            foreach($likes as $like)
+            {
+                craft()->like->deleteLikeById($like->id);
+            }
+        });
+
+        craft()->on('users.onBeforeDeleteUser', function(Event $event) {
+
+            $user = $event->params['user'];
+
+
+            // delete likes where the user is liked
+
+            $likes = craft()->like->getLikesByElementId($user->id);
+
+            foreach($likes as $like)
+            {
+                craft()->like->deleteLikeById($like->id);
+            }
+
+
+            // delete likes of the user
+
+            $likes = craft()->like->getLikesByUserId($user->id);
+
+            foreach($likes as $like)
+            {
+                craft()->like->deleteLikeById($like->id);
+            }
+        });
+    }
 
     public function enableNotifications()
     {
@@ -66,6 +91,6 @@ class LikePlugin extends BasePlugin
      */
     function getDeveloperUrl()
     {
-        return 'http://dukt.net/';
+        return 'https://dukt.net/';
     }
 }

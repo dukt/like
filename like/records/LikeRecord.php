@@ -44,8 +44,8 @@ class LikeRecord extends BaseRecord
     {
         return array(
             'element'   => array(static::BELONGS_TO, 'ElementRecord', 'id', 'required' => true, 'onDelete' => static::CASCADE),
-            'user' => array(static::BELONGS_TO, 'UserRecord', 'userId', 'required' => true, 'onDelete' => static::CASCADE),
-            'likeElement' => array(static::BELONGS_TO, 'ElementRecord', 'likeElementId', 'required' => true, 'onDelete' => static::CASCADE)
+            'user' => array(static::BELONGS_TO, 'UserRecord', 'userId', 'required' => true),
+            'likeElement' => array(static::BELONGS_TO, 'ElementRecord', 'likeElementId', 'required' => true)
         );
     }
 }
