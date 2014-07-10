@@ -12,10 +12,8 @@
 
 namespace Craft;
 
-class LikeModel extends BaseElementModel
+class LikeModel extends BaseModel
 {
-    protected $elementType = 'Like_Like';
-
     /**
      * Define Attributes
      */
@@ -23,8 +21,8 @@ class LikeModel extends BaseElementModel
     {
         return array_merge(parent::defineAttributes(), array(
             'id' => AttributeType::Number,
-            'likeElementId' => AttributeType::Number,
             'userId' => AttributeType::Number,
+            'elementId' => AttributeType::Number,
         ));
     }
 
@@ -38,9 +36,9 @@ class LikeModel extends BaseElementModel
 
     public function getElement()
     {
-        if($this->likeElementId)
+        if($this->elementId)
         {
-            return craft()->elements->getElementById($this->likeElementId);
+            return craft()->elements->getElementById($this->elementId);
         }
     }
 }

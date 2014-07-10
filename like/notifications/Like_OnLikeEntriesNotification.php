@@ -28,7 +28,7 @@ class Like_OnLikeEntriesNotification extends BaseNotification
             // data
             $data = array(
                 'likeId' => $like->id,
-                'entryId' => $like->likeElementId
+                'entryId' => $like->elementId
             );
 
             // send notification

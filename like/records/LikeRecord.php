@@ -36,16 +36,15 @@ class LikeRecord extends BaseRecord
     public function defineIndexes()
     {
         return array(
-            array('columns' => array('userId', 'likeElementId'), 'unique' => true),
+            array('columns' => array('userId', 'elementId'), 'unique' => true),
         );
     }
 
     public function defineRelations()
     {
         return array(
-            'element'   => array(static::BELONGS_TO, 'ElementRecord', 'id', 'required' => true, 'onDelete' => static::CASCADE),
             'user' => array(static::BELONGS_TO, 'UserRecord', 'userId', 'required' => true),
-            'likeElement' => array(static::BELONGS_TO, 'ElementRecord', 'likeElementId', 'required' => true)
+            'element' => array(static::BELONGS_TO, 'ElementRecord', 'elementId', 'required' => true)
         );
     }
 }

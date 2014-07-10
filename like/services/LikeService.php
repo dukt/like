@@ -14,14 +14,12 @@ namespace Craft;
 
 class LikeService extends BaseApplicationComponent
 {
-    public function add($likeElementId, $userId)
+    public function add($elementId, $userId)
     {
-        $validateContent = false;
-
-        $conditions = 'likeElementId=:likeElementId and userId=:userId';
+        $conditions = 'elementId=:elementId and userId=:userId';
 
         $params = array(
-            ':likeElementId' => $likeElementId,
+            ':elementId' => $elementId,
             ':userId' => $userId
         );
 
@@ -30,11 +28,11 @@ class LikeService extends BaseApplicationComponent
         if (!$record)
         {
             $model = new LikeModel();
-            $model->likeElementId = $likeElementId;
+            $model->elementId = $elementId;
             $model->userId = $userId;
 
             $record = new LikeRecord;
-            $record->likeElementId = $model->likeElementId;
+            $record->elementId = $model->elementId;
             $record->userId = $model->userId;
 
             $record->validate();
@@ -42,17 +40,12 @@ class LikeService extends BaseApplicationComponent
 
             if(!$model->hasErrors())
             {
-                if(craft()->elements->saveElement($model, $validateContent))
-                {
-                    $record->id = $model->id;
-                    $record->save(false);
+                $record->save(false);
+                $model->id = $record->id;
 
-                    $this->onAddLike(new Event($this, array(
-                        'like' => $model
-                    )));
-
-                    return true;
-                }
+                $this->onAddLike(new Event($this, array(
+                    'like' => $model
+                )));
             }
         }
         else
@@ -87,9 +80,9 @@ class LikeService extends BaseApplicationComponent
                 }
             }
 
-            // delete like element
+            // delete like
 
-            craft()->elements->deleteElementById($like->id);
+            $record->delete();
 
             $this->onRemoveLike(new Event($this, array(
                 'like' => $like
@@ -99,12 +92,12 @@ class LikeService extends BaseApplicationComponent
         return true;
     }
 
-    public function remove($likeElementId, $userId)
+    public function remove($elementId, $userId)
     {
-        $conditions = 'likeElementId=:likeElementId and userId=:userId';
+        $conditions = 'elementId=:elementId and userId=:userId';
 
         $params = array(
-            ':likeElementId' => $likeElementId,
+            ':elementId' => $elementId,
             ':userId' => $userId
         );
 
@@ -130,18 +123,18 @@ class LikeService extends BaseApplicationComponent
 
     public function getLikesByElementId($elementId)
     {
-        $conditions = 'likeElementId=:likeElementId';
+        $conditions = 'elementId=:elementId';
 
-        $params = array(':likeElementId' => $elementId);
+        $params = array(':elementId' => $elementId);
 
         $records = LikeRecord::model()->findAll($conditions, $params);
 
         return LikeModel::populateModels($records);
     }
 
-    public function getLikes($likeElementId = null)
+    public function getLikes($elementId = null)
     {
-        return $this->getLikesByElementId($likeElementId);
+        return $this->getLikesByElementId($elementId);
     }
 
     public function getLikesByUserId($userId)
@@ -182,17 +175,17 @@ class LikeService extends BaseApplicationComponent
 
         foreach($records as $record) {
 
-            $likeElement = craft()->elements->getElementById($record->likeElementId, $elementType);
+            $element = craft()->elements->getElementById($record->elementId, $elementType);
 
-            if($likeElement) {
-                array_push($likes, $likeElement);
+            if($element) {
+                array_push($likes, $element);
             }
         }
 
         return $likes;
     }
 
-    public function isLike($likeElementId)
+    public function isLike($elementId)
     {
         if(craft()->userSession->isLoggedIn()) {
             $userId = craft()->userSession->getUser()->id;
@@ -202,10 +195,10 @@ class LikeService extends BaseApplicationComponent
 
         $userId = craft()->userSession->getUser()->id;
 
-        $conditions = 'likeElementId=:likeElementId and userId=:userId';
+        $conditions = 'elementId=:elementId and userId=:userId';
 
         $params = array(
-            ':likeElementId' => $likeElementId,
+            ':elementId' => $elementId,
             ':userId' => $userId
         );
 
