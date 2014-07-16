@@ -75,7 +75,7 @@ class LikePlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '0.9.3';
+        return '0.9.4';
     }
 
     /**
