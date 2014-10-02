@@ -27,8 +27,7 @@ class LikeRecord extends BaseRecord
      */
     public function defineAttributes()
     {
-        return array(
-        );
+        return array();
     }
 
     /**

@@ -25,26 +25,68 @@ class LikeService extends BaseApplicationComponent
 
         $record = LikeRecord::model()->find($conditions, $params);
 
-        if (!$record) {
-
-            // add fav
+        if (!$record)
+        {
+            $model = new LikeModel();
+            $model->elementId = $elementId;
+            $model->userId = $userId;
 
             $record = new LikeRecord;
-            $record->elementId = $elementId;
-            $record->userId = $userId;
-            $record->save();
+            $record->elementId = $model->elementId;
+            $record->userId = $model->userId;
 
+            $record->validate();
+            $model->addErrors($record->getErrors());
 
-            // event
+            if(!$model->hasErrors())
+            {
+                $record->save(false);
+                $model->id = $record->id;
 
-            $element = craft()->elements->getElementById($elementId);
-
-            $this->onAddLike(new Event($this, array(
-                'element' => $element
-            )));
-
-        } else {
+                $this->onAddLike(new Event($this, array(
+                    'like' => $model
+                )));
+            }
+        }
+        else
+        {
             // already a fav
+        }
+
+        return true;
+    }
+
+    public function deleteLikeById($id)
+    {
+        $record = LikeRecord::model()->findByPk($id);
+
+        if ($record)
+        {
+            $like = LikeModel::populateModel($record);
+
+            if(isset(craft()->notifications))
+            {
+                // remove notification related to this like
+
+                $notifications = array();
+
+                $notifications = array_merge($notifications, craft()->notifications->findNotificationsByData('like.onlikeentries', 'likeId', $like->id));
+
+                $notifications = array_merge($notifications, craft()->notifications->findNotificationsByData('like.onlikeme', 'likeId', $like->id));
+
+                foreach($notifications as $notification)
+                {
+                    craft()->notifications->deleteNotificationById($notification->id);
+                }
+            }
+
+            // delete like
+
+            $record->delete();
+
+            $this->onRemoveLike(new Event($this, array(
+                'like' => $like
+            )));
         }
 
         return true;
@@ -63,30 +105,49 @@ class LikeService extends BaseApplicationComponent
 
         if ($record)
         {
-            $record->delete();
+            $this->deleteLikeById($record->id);
         }
 
         return true;
     }
 
-    public function getLikes($elementId = null)
+    public function getLikeById($id)
     {
-        $likes = array();
+        $record = LikeRecord::model()->findByPk($id);
 
+        if($record)
+        {
+            return LikeModel::populateModel($record);
+        }
+    }
 
-        // find likes
-
+    public function getLikesByElementId($elementId)
+    {
         $conditions = 'elementId=:elementId';
 
         $params = array(':elementId' => $elementId);
 
         $records = LikeRecord::model()->findAll($conditions, $params);
 
-        foreach($records as $record) {
-            array_push($likes, $record);
-        }
+        return LikeModel::populateModels($records);
+    }
 
-        return $likes;
+    public function getLikes($elementId = null)
+    {
+        return $this->getLikesByElementId($elementId);
+    }
+
+    public function getLikesByUserId($userId)
+    {
+        $conditions = 'userId=:userId';
+
+        $params = array(
+            ':userId' => $userId
+        );
+
+        $records = LikeRecord::model()->findAll($conditions, $params);
+
+        return LikeModel::populateModels($records);
     }
 
     public function getUserLikes($elementType = null, $userId = null)
@@ -114,10 +175,10 @@ class LikeService extends BaseApplicationComponent
 
         foreach($records as $record) {
 
-            $likeElement = craft()->elements->getElementById($record->elementId, $elementType);
+            $element = craft()->elements->getElementById($record->elementId, $elementType);
 
-            if($likeElement) {
-                array_push($likes, $likeElement);
+            if($element) {
+                array_push($likes, $element);
             }
         }
 
@@ -153,5 +214,10 @@ class LikeService extends BaseApplicationComponent
     public function onAddLike(Event $event)
     {
         $this->raiseEvent('onAddLike', $event);
+    }
+
+    public function onRemoveLike(Event $event)
+    {
+        $this->raiseEvent('onRemoveLike', $event);
     }
 }
