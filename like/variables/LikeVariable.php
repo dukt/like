@@ -19,9 +19,9 @@ class LikeVariable
         return craft()->like->isLike($elementId);
     }
 
-    public function getLikes($elementType = null)
+    public function getLikes($elementId = null)
     {
-    	return craft()->like->getLikes($elementType);
+    	return craft()->like->getLikes($elementId);
     }
 
     public function getUserLikes($elementType = null, $userId = null)

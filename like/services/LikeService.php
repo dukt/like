@@ -71,9 +71,6 @@ class LikeService extends BaseApplicationComponent
 
     public function getLikes($elementId = null)
     {
-        $likes = array();
-
-
         // find likes
 
         $conditions = 'elementId=:elementId';
@@ -82,11 +79,7 @@ class LikeService extends BaseApplicationComponent
 
         $records = LikeRecord::model()->findAll($conditions, $params);
 
-        foreach($records as $record) {
-            array_push($likes, $record);
-        }
-
-        return $likes;
+        return LikeModel::populateModels($records);
     }
 
     public function getUserLikes($elementType = null, $userId = null)
