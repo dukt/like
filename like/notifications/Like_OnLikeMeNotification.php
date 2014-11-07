@@ -22,29 +22,46 @@ class Like_OnLikeMeNotification extends BaseNotification
         return 'like.addLike';
     }
 
-
     /**
      * Action : Send a notification when someone likes me
      */
     public function action(Event $event)
     {
-        $contextUser = craft()->userSession->getUser();
+        $like = $event->params['like'];
+        $sender = $like->getUser();
+        $recipient = $like->getElement();
 
-        if(!$contextUser) {
-            return;
+        if($recipient->elementType == 'User')
+        {
+            $data = array(
+                'likeId' => $like->id
+            );
+
+            // send notification
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $sender, $data);
         }
+    }
 
-        $element = $event->params['element'];
+    /**
+     * Get variables
+     */
+    public function getVariables($data = array())
+    {
+        if(!empty($data['likeId']))
+        {
+            $like = craft()->like->getLikeById($data['likeId']);
 
-        if($element->elementType != 'User') {
-            return;
+            return array(
+                'like' => $like,
+            );
         }
+    }
 
-        $user = $element;
-
-        $variables['user'] = $user;
-        $variables['contextUser'] = $contextUser;
-
-        craft()->notifications->sendNotification($this->getHandle(), $user, $variables);
+    /**
+     * Default Open CP Url Format
+     */
+    public function defaultOpenCpUrlFormat()
+    {
+        return '{{user.cpEditUrl}}';
     }
 }

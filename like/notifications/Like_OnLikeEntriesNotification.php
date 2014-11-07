@@ -22,31 +22,66 @@ class Like_OnLikeEntriesNotification extends BaseNotification
         return 'like.addLike';
     }
 
-
     /**
      * Action : Send a notification when someone likes my entries
      */
     public function action(Event $event)
     {
-        $contextUser = craft()->userSession->getUser();
+        $like = $event->params['like'];
 
-        if(!$contextUser) {
-            return;
+        if($like->getElement()->elementType == 'Entry')
+        {
+            $entry = $like->getElement();
+            $sender = $like->getUser();
+            $recipient = $entry->author;
+
+            // data
+            $data = array(
+                'likeId' => $like->id,
+                'entryId' => $like->elementId
+            );
+
+            // send notification
+            craft()->notifications->sendNotification($this->getHandle(), $recipient, $sender, $data);
+        }
+    }
+
+    /**
+     * Get variables
+     */
+    public function getVariables($data = array())
+    {
+        if(!empty($data['likeId']))
+        {
+            $like = craft()->like->getLikeById($data['likeId']);
+
+            if($like)
+            {
+                $entry = $like->getElement();
+
+                return array(
+                    'entry' => $entry,
+                    'like' => $like,
+                );
+            }
         }
 
-        $element = $event->params['element'];
+        return array();
+    }
 
-        if($element->elementType != 'Entry') {
-            return;
-        }
+    /**
+     * Default Open Url Format
+     */
+    public function defaultOpenUrlFormat()
+    {
+        return '{{entry.url}}';
+    }
 
-        $user = $element->author;
-
-        $variables['user'] = $user;
-        $variables['contextUser'] = $contextUser;
-        $variables['contextElement'] = $element;
-        $variables['entry'] = $element;
-
-        craft()->notifications->sendNotification($this->getHandle(), $user, $variables);
+    /**
+     * Default Open CP Url Format
+     */
+    public function defaultOpenCpUrlFormat()
+    {
+        return '{{entry.cpEditUrl}}';
     }
 }

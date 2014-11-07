@@ -28,7 +28,8 @@ class LikeModel extends BaseModel
 
     public function getUser()
     {
-        if ($this->userId) {
+        if ($this->userId)
+        {
             return craft()->users->getUserById($this->userId);
         }
     }
