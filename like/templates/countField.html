@@ -1,1 +1,9 @@
-{{totalLikes}}
+<p class="light">
+
+    {% if totalLikes %}
+        {{ "{totalLikes} likes"|t({ totalLikes: totalLikes }) }}
+    {% else %}
+        {{ "No likes"|t }}
+    {% endif %}
+
+</p>
