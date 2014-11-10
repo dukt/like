@@ -1,4 +1,4 @@
-{% extends "demos/like/_layout" %}
+{% extends "like/_layout" %}
 
 {% block main %}
 
@@ -6,7 +6,7 @@
         <h1>Entries</h1>
 
         {% if not currentUser %}
-            <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
+            <p>You need to <a href="{{url('like/login')}}">login</a> in order to start liking elements.</p>
         {% endif %}
 
         {% set entries = craft.entries.order('totalLikes desc').limit(5) %}
@@ -18,7 +18,9 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
 
-            {% include 'demos/like/_likeBtn' with { element: entry } %}
+            {% include 'like/_likeBtn' with { element: entry } %}
+
+            <hr>
 
         {% endfor %}
     </div>

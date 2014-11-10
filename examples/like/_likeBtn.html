@@ -21,9 +21,9 @@
             {% for like in likes %}
                 <a href="#">
                     {% if like.user.photoUrl %}
-                        <img src="{{like.user.photoUrl}}" width="36" class="img-rounded" data-toggle="tooltip" data-original-title="{{like.user.email}}" />
+                        <img src="{{like.user.photoUrl}}" width="34" class="img-rounded" data-toggle="tooltip" data-original-title="{{like.user.email}}" />
                     {% else %}
-                        <img src="http://placehold.it/36x36" data-toggle="tooltip" class="img-rounded" data-original-title="{{like.user.email}}">
+                        <img src="http://placehold.it/34x34" data-toggle="tooltip" class="img-rounded" data-original-title="{{like.user.email}}">
                     {% endif %}
                 </a>
             {% endfor %}

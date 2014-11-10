@@ -1,0 +1,29 @@
+{% extends "like/_layout" %}
+
+{% block main %}
+
+    <div class="col-md-12">
+        <h1>Assets</h1>
+
+        {% if not currentUser %}
+            <p>You need to <a href="{{url('like/login')}}">login</a> in order to start liking elements.</p>
+        {% endif %}
+
+        {% set assets = craft.assets.kind('image').find() %}
+
+        <hr>
+
+        <div class="row">
+            {% for asset in assets %}
+                {% set thumb = asset.url({width:500, height:300}) %}
+                {% if thumb %}
+                    <div class="col-sm-4">
+                        <img class="img-responsive thumbnail" src="{{ thumb }}" />
+                        {% include 'like/_likeBtn' with { element: asset } %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock main %}
