@@ -1,55 +1,25 @@
-{% extends "like/_layout" %}
+{% extends "demos/like/_layout" %}
 
 {% block main %}
 
-    <div class="col-md-12">
+    <div class="col-md-6 col-md-offset-3">
         <h1>Entries</h1>
 
         {% if not currentUser %}
             <p>You need to <a href="{{url('like/login')}}">log in</a> in order to start liking elements.</p>
         {% endif %}
 
-        {% set entries = craft.entries.order('totalLikes desc') %}
+        {% set entries = craft.entries.order('totalLikes desc').limit(5) %}
 
         <hr>
 
         {% for entry in entries %}
             <h2>{{entry.title}}</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia, earum, incidunt, ad, necessitatibus consectetur soluta eaque ratione porro corrupti dignissimos itaque provident amet non. Veritatis illum laudantium consectetur vel earum?</p>
 
+            {% include 'demos/like/_likeBtn' with { element: entry } %}
 
-            <p>
-                {% if currentUser %}
-                    {% if craft.like.isLike(entry.id) %}
-                        <a class="btn btn-default" href="{{actionUrl('like/remove', {id:entry.id})}}">Unlike</a>
-                    {% else %}
-                        <a class="btn btn-primary" href="{{actionUrl('like/add', {id:entry.id})}}">Like</a>
-                    {% endif %}
-                {% else %}
-                    <a class="btn disabled btn-primary" href="#">Like</a>
-                {% endif %}
-            </p>
-
-            {% set likes = craft.like.getLikes(entry.id) %}
-
-            {% if likes|length == 0 %}
-                <h4>0 likes</h4>
-            {% else %}
-
-                <h4>
-                    <strong>{{likes|length}} like{{(likes|length > 1 ? 's':'')}} by... </strong>
-                </h4>
-
-                <ul>
-                    {% for like in likes %}
-                        <li>{{like.user.email}}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if not loop.last %}
-                <hr />
-            {% endif %}
         {% endfor %}
     </div>
 

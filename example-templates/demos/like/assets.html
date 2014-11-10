@@ -1,4 +1,4 @@
-{% extends "like/_layout" %}
+{% extends "demos/like/_layout" %}
 
 {% block main %}
 
@@ -13,42 +13,17 @@
 
         <hr>
 
-        <div class="row">
             {% for asset in assets %}
-
-                <div class="col-sm-6">
-                    <img class="img-responsive thumbnail" src="{{asset.url({width:500, height:300})}}" />
-                    <div class="caption">
-
-                        <p>
-                            {% if currentUser %}
-                                {% if craft.like.isLike(asset.id) %}
-                                    <a class="btn btn-default" href="{{actionUrl('like/remove', {id:asset.id})}}">Unlike</a>
-                                {% else %}
-                                    <a class="btn btn-primary" href="{{actionUrl('like/add', {id:asset.id})}}">Like</a>
-                                {% endif %}
-                            {% else %}
-                                <a class="btn disabled btn-primary" href="#">Like</a>
-                            {% endif %}
-
-                            {% set likes = craft.like.getLikes(asset.id) %}
-
-                            {% if likes|length == 0 %}
-                                0 likes
-                            {% else %}
-                                {{likes|length}} like{{(likes|length > 1 ? 's':'')}}
-                            {% endif %}
-
-                        </p>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <img class="img-responsive thumbnail" src="{{asset.url({width:500, height:300})}}" />
+                        {% include 'demos/like/_likeBtn' with { element: asset } %}
 
                     </div>
                 </div>
 
-                {% if loop.index is divisible by(2) %}
-                    <div class="clearfix"></div>
-                {% endif %}
+                <hr>
             {% endfor %}
-        </div>
     </div>
 
 {% endblock main %}
