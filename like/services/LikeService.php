@@ -64,21 +64,6 @@ class LikeService extends BaseApplicationComponent
         {
             $like = LikeModel::populateModel($record);
 
-            if(isset(craft()->notifications))
-            {
-                // remove notification related to this like
-
-                $notifications = array();
-
-                $notifications = array_merge($notifications, craft()->notifications->findNotificationsByData('like.onlikeentries', 'likeId', $like->id));
-
-                $notifications = array_merge($notifications, craft()->notifications->findNotificationsByData('like.onlikeme', 'likeId', $like->id));
-
-                foreach($notifications as $notification)
-                {
-                    craft()->notifications->deleteNotificationById($notification->id);
-                }
-            }
 
             // delete like
 

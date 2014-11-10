@@ -57,11 +57,6 @@ class LikePlugin extends BasePlugin
         });
     }
 
-    public function enableNotifications()
-    {
-        return true;
-    }
-
     /**
      * Get Name
      */
