@@ -4,12 +4,13 @@
 
     <div class="col-md-12">
         <h1>Assets</h1>
+        <p class="lead">Most popular assets</p>
 
         {% if not currentUser %}
             <p>You need to <a href="{{url('like/login')}}">login</a> in order to start liking elements.</p>
         {% endif %}
 
-        {% set assets = craft.assets.kind('image').find() %}
+        {% set assets = craft.assets.kind('image').order('totalLikes desc').find() %}
 
         <hr>
 

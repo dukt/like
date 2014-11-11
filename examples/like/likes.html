@@ -4,12 +4,13 @@
 
     <div class="col-md-12">
         <h1>Your Likes</h1>
+        <p class="lead">Entries and asset that you like.</p>
+
+        <hr>
 
         {% if not currentUser %}
             <p>You need to <a href="{{url('like/login')}}">login</a> in order to start liking elements.</p>
         {% endif %}
-
-        <hr>
 
         <div class="row">
 

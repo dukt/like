@@ -2,8 +2,9 @@
 
 {% block main %}
 
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-8 col-md-offset-2">
         <h1>Entries</h1>
+        <p class="lead">Most popular entries</p>
 
         {% if not currentUser %}
             <p>You need to <a href="{{url('like/login')}}">login</a> in order to start liking elements.</p>
