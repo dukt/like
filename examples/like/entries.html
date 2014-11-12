@@ -3,16 +3,17 @@
 {% block main %}
 
     <div class="col-md-8 col-md-offset-2">
+
         <h1>Entries</h1>
         <p class="lead">Most popular entries</p>
+
+        <hr>
 
         {% if not currentUser %}
             <p>You need to <a href="{{url('like/login')}}">login</a> in order to start liking elements.</p>
         {% endif %}
 
         {% set entries = craft.entries.order('totalLikes desc').limit(5) %}
-
-        <hr>
 
         {% for entry in entries %}
             <h2>{{entry.title}}</h2>
@@ -24,6 +25,7 @@
             <hr>
 
         {% endfor %}
+
     </div>
 
 

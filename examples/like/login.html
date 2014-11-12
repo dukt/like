@@ -2,12 +2,15 @@
 
 {% block main %}
 
-    <div class="col-md-12">
+    <div class="col-md-6 col-md-offset-3">
+
         <h1>Login</h1>
+
+        <hr>
 
         <form method="post" action="" accept-charset="UTF-8">
             <input type="hidden" name="action" value="users/login">
-            <input type="hidden" name="redirect" value="like">
+            <input type="hidden" name="redirect" value="follow">
 
 
             <div class="form-group">
@@ -20,15 +23,9 @@
                 <input name="password" type="password" class="form-control" id="password">
             </div>
 
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="rememberMe" value="1">
-                    Remember me
-                </label>
-            </div>
-
-            <p><input type="submit" class="btn btn-primary" value="Login"> &nbsp; <a href="{{ url('login/forgotpassword') }}" class="btn btn-default btn-sm">Forget your password?</a></p>
+            <p><input type="submit" class="btn btn-primary" value="Login"></p>
         </form>
+
     </div>
 
 {% endblock main %}
