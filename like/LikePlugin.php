@@ -16,43 +16,21 @@ class LikePlugin extends BasePlugin
 {
     public function init()
     {
-        craft()->on('entries.onBeforeDeleteEntry', function(Event $event) {
+        craft()->on('elements.onBeforeDeleteElements', function(Event $event) {
 
-            $entry = $event->params['entry'];
-
-
-            // delete likes related to this entry
-
-            $likes = craft()->like->getLikesByElementId($entry->id);
-
-            foreach($likes as $like)
+            if(!empty($event->params['elementIds']) && is_array($event->params['elementIds']))
             {
-                craft()->like->deleteLikeById($like->id);
-            }
-        });
+                $elementIds = $event->params['elementIds'];
 
-        craft()->on('users.onBeforeDeleteUser', function(Event $event) {
+                foreach($elementIds as $elementId)
+                {
+                    $likes = craft()->like->getLikesByElementId($elementId);
 
-            $user = $event->params['user'];
-
-
-            // delete likes where the user is liked
-
-            $likes = craft()->like->getLikesByElementId($user->id);
-
-            foreach($likes as $like)
-            {
-                craft()->like->deleteLikeById($like->id);
-            }
-
-
-            // delete likes of the user
-
-            $likes = craft()->like->getLikesByUserId($user->id);
-
-            foreach($likes as $like)
-            {
-                craft()->like->deleteLikeById($like->id);
+                    foreach($likes as $like)
+                    {
+                        craft()->like->deleteLikeById($like->id);
+                    }
+                }
             }
         });
     }
