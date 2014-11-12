@@ -4,6 +4,7 @@ Let your users like your website's content. They can like entries, assets and us
 
 - [Like Overview](https://dukt.net/craft/like/)
 - [Like Docs](https://dukt.net/craft/like/docs)
+- [Like Updates](https://dukt.net/craft/like/updates)
 - [Like License](https://dukt.net/craft/like/docs/license)
 
 
