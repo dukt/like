@@ -8,4 +8,4 @@ Let your users like your website's content. They can like entries, assets and us
 - [Like License](https://dukt.net/craft/like/docs/license)
 
 
-[Dukt.net](https://dukt.net/) © 2014 - All rights reserved
+[Dukt.net](https://dukt.net/) © 2015 - All rights reserved
