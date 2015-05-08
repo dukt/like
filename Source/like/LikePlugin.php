@@ -12,6 +12,8 @@
 
 namespace Craft;
 
+require_once(CRAFT_PLUGINS_PATH.'like/Info.php');
+
 class LikePlugin extends BasePlugin
 {
     public function init()
