@@ -6,12 +6,12 @@ do
 
 # Create Info.php with plugin version constant
 
-cat > Source/like/Info.php << EOF
+cat > Source/${PLUGIN_NAME}/Info.php << EOF
 <?php
 
 namespace Craft;
 
-define('LIKE_VERSION', '$VERSION');
+define('${PLUGIN_NAME_UP}_VERSION', '$VERSION');
 
 EOF
 
