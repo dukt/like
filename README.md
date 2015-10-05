@@ -5,11 +5,6 @@ A simple plugin to connect to Like's API.
 -------------------------------------------
 
 
-## Warning
-
-This plugin is still under development, please do not use on production.
-
-
 ## Installation
 
 1. Download the latest release of the plugin
