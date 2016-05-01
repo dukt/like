@@ -43,7 +43,7 @@ class LikeRecord extends BaseRecord
     public function defineRelations()
     {
         return array(
-            'user' => array(static::BELONGS_TO, 'UserRecord', 'userId', 'required' => true),
+            'user' => array(static::BELONGS_TO, 'UserRecord', 'userId', 'required' => false),
             'element' => array(static::BELONGS_TO, 'ElementRecord', 'elementId', 'required' => true)
         );
     }

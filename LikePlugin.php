@@ -35,6 +35,20 @@ class LikePlugin extends BasePlugin
                 }
             }
         });
+
+        craft()->on('users.onBeforeDeleteUser', function(Event $event) {
+
+            if (!craft()->config->get('retainLikesOnUserDeletion', 'like'))
+            {
+                $user = $event->params['user'];
+                $likes = craft()->like->getLikesByUserId($user->id);
+
+                foreach($likes as $like)
+                {
+                    craft()->like->deleteLikeById($like->id);
+                }
+            }
+        });
     }
 
     /**
