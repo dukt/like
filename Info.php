@@ -2,4 +2,4 @@
 
 namespace Craft;
 
-define('LIKE_VERSION', '0.9.7');
+define('LIKE_VERSION', '0.9.8');

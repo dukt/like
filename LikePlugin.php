@@ -68,6 +68,14 @@ class LikePlugin extends BasePlugin
     }
 
     /**
+    * Get SchemaVersion
+    */
+   public function getSchemaVersion()
+   {
+       return '0.9.8';
+   }
+
+    /**
      * Get Developer
      */
     function getDeveloper()
