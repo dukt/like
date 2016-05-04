@@ -28,4 +28,11 @@ class LikeVariable
     {
         return craft()->like->getUserLikes($elementType, $userId);
     }
+
+    public function getTotalLikes($elementId)
+    {
+      $likes = craft()->like->getLikes($elementId);
+
+      return count($likes);
+    }
 }

@@ -47,6 +47,13 @@ A simple plugin to connect to Like's API.
     {% endif %}
 
 
+### Get total number of likes for an element
+
+    {% set totalLikes = craft.like.getTotalLikes(element.id) %}
+
+    {{ totalLikes }}
+
+
 ### Your Likes
 
 Entries and asset that you like.
@@ -90,3 +97,4 @@ Assets:
 - isLike($elementId)
 - getLikes($elementId = null)
 - getUserLikes($elementType = null, $userId = null)
+- getTotalLikes($elementId)
