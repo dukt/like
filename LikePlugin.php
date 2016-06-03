@@ -12,8 +12,6 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'like/Info.php');
-
 class LikePlugin extends BasePlugin
 {
     public function init()
@@ -50,7 +48,7 @@ class LikePlugin extends BasePlugin
      */
     function getVersion()
     {
-        return LIKE_VERSION;
+        return '1.0.0';
     }
 
     /**
