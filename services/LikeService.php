@@ -77,6 +77,55 @@ class LikeService extends BaseApplicationComponent
         return true;
     }
 
+    public function transferLikesByUserId($userId, $userIdToTransferContentTo)
+    {
+        $conditions = 'userId=:userId';
+
+        $params = array(
+            ':userId' => $userId
+        );
+
+        $records = LikeRecord::model()->findAll($conditions, $params);
+
+        foreach($records as $record) {
+            $like = LikeModel::populateModel($record);
+
+            $elementId = $record->elementId;
+
+            // delete original like
+            $record->delete();
+
+            // create like on new user
+            $this->add($elementId, $userIdToTransferContentTo);
+        }
+
+        return true;
+    }
+
+    public function deleteLikesByUserId($userId)
+    {
+        $conditions = 'userId=:userId';
+
+        $params = array(
+            ':userId' => $userId
+        );
+
+        $records = LikeRecord::model()->findAll($conditions, $params);
+
+        foreach($records as $record) {
+            $like = LikeModel::populateModel($record);
+
+            // delete like
+            $record->delete();
+
+            $this->onRemoveLike(new Event($this, array(
+                'like' => $like
+            )));
+        }
+
+        return true;
+    }
+
     public function remove($elementId, $userId)
     {
         $conditions = 'elementId=:elementId and userId=:userId';
@@ -119,7 +168,40 @@ class LikeService extends BaseApplicationComponent
 
     public function getLikes($elementId = null)
     {
-        return $this->getLikesByElementId($elementId);
+        if ($elementId) {
+            return $this->getLikesByElementId($elementId);
+        } else {
+            $likes = array();
+
+            // It'd be nice to use the model, but grouping seems to be problematic
+            // $records = LikeRecord::model()->findAll(array(
+            //     'select' => 'COUNT(elementId) AS count, elementId',
+            //     'group' => 'elementId'
+            // ));
+
+            $query = craft()->db->createCommand();
+            $records = $query
+                ->select('COUNT(elementId) AS count, elementId')
+                ->from('likes')
+                ->group('elementId')
+                ->order('count DESC')
+                ->queryAll();
+
+            foreach($records as $record) {
+
+                $element = craft()->elements->getElementById($record['elementId']);
+
+                if($element) {
+                    array_push($likes, array(
+                        'title' => $element->title,
+                        'uri' => $element->uri,
+                        'count' => $record['count']
+                    ));
+                }
+            }
+
+            return $likes;
+        }
     }
 
     public function getLikesByUserId($userId)
