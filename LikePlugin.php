@@ -74,4 +74,12 @@ class LikePlugin extends BasePlugin
     {
         return 'https://dukt.net/';
     }
+
+    /**
+     * Get release feed URL
+     */
+    public function getReleaseFeedUrl()
+    {
+        return 'https://raw.githubusercontent.com/dukt/like/master/releases.json';
+    }
 }

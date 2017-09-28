@@ -5,6 +5,7 @@
     "date": "2017-09-27T11:00:00-02:00",
     "notes": [
       "[Added] Added `release.json` file.",
+      "[Added] Added `getReleaseFeedUrl()` method to `LikePlugin`.",
       "[Improved] Renamed composer package to `dukt/like`.",
       "[Fixed] Fixed public methods in `LikePlugin`."
     ]
