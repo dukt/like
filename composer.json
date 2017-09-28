@@ -1,14 +1,13 @@
 {
   "name": "dukt/like",
   "description": "Like plugin for Craft CMS",
+  "type": "craft-plugin",
   "authors": [
     {
-      "name": "Benjamin David",
-      "email": "ben@dukt.net"
+      "name": "Dukt",
+      "email": "support@dukt.net"
     }
   ],
-  "type": "craft-plugin",
-
   "require": {
     "composer/installers": "~1.0"
   }
