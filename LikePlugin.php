@@ -38,7 +38,7 @@ class LikePlugin extends BasePlugin
     /**
      * Get Name
      */
-    function getName()
+    public function getName()
     {
         return Craft::t('Like');
     }
@@ -46,9 +46,9 @@ class LikePlugin extends BasePlugin
     /**
      * Get Version
      */
-    function getVersion()
+    public function getVersion()
     {
-        return '1.0.0';
+        return '1.0.1';
     }
 
     /**
@@ -62,7 +62,7 @@ class LikePlugin extends BasePlugin
     /**
      * Get Developer
      */
-    function getDeveloper()
+    public function getDeveloper()
     {
         return 'Dukt';
     }
@@ -70,7 +70,7 @@ class LikePlugin extends BasePlugin
     /**
      * Get Developer URL
      */
-    function getDeveloperUrl()
+    public function getDeveloperUrl()
     {
         return 'https://dukt.net/';
     }
