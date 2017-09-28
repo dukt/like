@@ -80,6 +80,6 @@ class LikePlugin extends BasePlugin
      */
     public function getReleaseFeedUrl()
     {
-        return 'https://raw.githubusercontent.com/dukt/like/master/releases.json';
+        return 'https://raw.githubusercontent.com/dukt/like/v1/releases.json';
     }
 }
