@@ -1,0 +1,40 @@
+{% do view.registerAssetBundle("dukt\\like\\assetbundles\\like\\LikeAsset") %}
+
+{%- set cols = (cols is defined ? cols : []) %}
+{%- set rows = (rows is defined ? rows : []) -%}
+
+{% from "_includes/forms" import field %}
+
+{{ field({
+    id: id,
+    name: name,
+    label: label,
+    instructions: instructions,
+}) }}
+
+<table id="{{ id }}" class="data fullwidth">
+  <thead>
+    <tr>
+      {% for col in cols %}
+        <th scope="col">{{ col.heading ? col.heading : ' ' }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for rowId, row in rows %}
+      <tr data-id="{{ rowId }}">
+        {% for colId, col in cols %}
+          {% set cellName = name~'['~rowId~']['~colId~']' %}
+          {% set value = (row[colId] is defined ? row[colId] : null) %}
+          <td class="{% if col.class is defined %}{{ col.class }}{% endif %}"{% if col.width is defined %} width="{{ col.width }}"{% endif %}>
+              {% if colId == 'uri' %}
+                  <p name="{{ cellName }}"><a href="{{ '/'~value }}">{{ value }}</a></p>
+              {% else %}
+                  <p name="{{ cellName }}">{{ value }}</p>
+              {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

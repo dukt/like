@@ -1,0 +1,43 @@
+{
+    "name": "dukt/craft-like",
+    "description": "Like plugin for Craft CMS",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "like"
+    ],
+    "support": {
+        "docs": "https://github.com/dukt/like/blob/master/README.md",
+        "issues": "https://github.com/dukt/like/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benjamin David",
+            "homepage": "https://github.com/benjamindavid"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "dukt\\like\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Like",
+        "handle": "like",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/dukt/like/master/CHANGELOG.md",
+        "components": {
+            "likeService": "dukt\\like\\services\\LikeService"
+        },
+        "class": "dukt\\like\\Like"
+    }
+}
