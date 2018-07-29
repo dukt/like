@@ -1,11 +1,15 @@
 <?php
+
 /**
- * Like plugin for Craft CMS 3.x
+ * Craft Like plugin for Craft CMS 3.x
  *
  * A simple plugin to connect to Like's API.
  *
- * @link      https://github.com/benjamindavid
- * @copyright Copyright (c) 2018 Benjamin David
+ * @package   Craft Like
+ * @author    Benjamin David
+ * @copyright Copyright (c) 2015, Dukt
+ * @link      https://dukt.net/craft/like/
+ * @license   https://dukt.net/craft/like/docs/license
  */
 
 namespace dukt\like\controllers;
@@ -15,11 +19,6 @@ use dukt\like\Like;
 use Craft;
 use craft\web\Controller;
 
-/**
- * @author    Benjamin David
- * @package   Like
- * @since     1.0.0
- */
 class DefaultController extends Controller
 {
 
@@ -31,7 +30,7 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    // protected $allowAnonymous = ['index', 'add', 'remove'];
+    protected $allowAnonymous = ['index', 'add', 'remove'];
 
     // Public Methods
     // =========================================================================
@@ -39,11 +38,10 @@ class DefaultController extends Controller
     /**
      * @return mixed
      */
-    public function actionAdd(array $variables = array())
+    public function actionAdd($elementId)
     {
         $request = Craft::$app->getRequest();
 
-        $elementId = $request->getParam('id');
         $userId = Craft::$app->getUser()->id;
 
         $response = Like::$plugin->likeService->add($elementId, $userId);
@@ -54,18 +52,17 @@ class DefaultController extends Controller
                     'success' => true,
                 ]);
             } else {
-                return $this->returnErrorJson(Craft::t("Couldn't add like."));
+                return $this->returnErrorJson(Craft::t('like', "Couldn't add like."));
             }
         } else {
             return $this->redirect($request->getReferrer());
         }
     }
 
-    public function actionRemove(array $variables = array())
+    public function actionRemove($elementId)
     {
         $request = Craft::$app->getRequest();
 
-        $elementId = $request->getParam('id');
         $userId = Craft::$app->getUser()->id;
 
         $response = Like::$plugin->likeService->remove($elementId, $userId);
@@ -76,7 +73,7 @@ class DefaultController extends Controller
                     'success' => true,
                 ]);
             } else {
-                return $this->returnErrorJson(Craft::t("Couldn't remove like."));
+                return $this->returnErrorJson(Craft::t('like', "Couldn't remove like."));
             }
         } else {
             return $this->redirect($request->getReferrer());

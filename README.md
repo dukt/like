@@ -28,9 +28,9 @@ To install the plugin, follow these instructions.
 
     {% if currentUser %}
         {% if craft.like.isLike(element.id) %}
-            <a class="btn btn-default" href="{{actionUrl('like/remove', {id:element.id})}}"><span class="glyphicon glyphicon-star"></span> Unlike</a>
+            <a class="btn btn-default" href="/like/remove/{{element.id}}"><span class="glyphicon glyphicon-star"></span> Unlike</a>
         {% else %}
-            <a class="btn btn-primary" href="{{actionUrl('like/add', {id:element.id})}}"><span class="glyphicon glyphicon-star"></span> Like</a>
+            <a class="btn btn-primary" href="/like/add/{{element.id}}"><span class="glyphicon glyphicon-star"></span> Like</a>
         {% endif %}
     {% else %}
         <a class="btn disabled btn-primary" href="#">Like</a>

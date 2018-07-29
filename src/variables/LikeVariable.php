@@ -15,9 +15,15 @@ use dukt\like\Like;
 use Craft;
 
 /**
+ * Craft Like plugin for Craft CMS 3.x
+ *
+ * A simple plugin to connect to Like's API.
+ *
+ * @package   Craft Like
  * @author    Benjamin David
- * @package   Like
- * @since     1.0.0
+ * @copyright Copyright (c) 2015, Dukt
+ * @link      https://dukt.net/craft/like/
+ * @license   https://dukt.net/craft/like/docs/license
  */
 class LikeVariable
 {

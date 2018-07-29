@@ -18,6 +18,7 @@ use dukt\like\events\LikeEvent;
 use Craft;
 use craft\base\Component;
 use craft\db\Query;
+use craft\helpers\DateTimeHelper;
 
 /**
  * @author    Benjamin David
@@ -42,7 +43,11 @@ class LikeService extends Component
     // =========================================================================
 
     /*
-     * @return mixed
+     * Add a record to the database representing the like
+     *
+     * @param mixed $elementId
+     * @param mixed $userId
+     * @return boolean
      */
     public function add($elementId, $userId)
     {
@@ -78,6 +83,12 @@ class LikeService extends Component
         return true;
     }
 
+    /*
+     * Remove a Like from the database using the supplied $id
+     *
+     * @param mixed $id
+     * @return boolean
+     */
     public function deleteLikeById($id)
     {
         $params = [
@@ -101,43 +112,13 @@ class LikeService extends Component
         return true;
     }
 
-    public function transferLikesByUserId($userId, $userIdToTransferContentTo)
-    {
-        $records = LikeRecord::findAll([
-            'userId' => $userId
-        ]);
-
-        foreach ($records as $record) {
-            $elementId = $record->elementId;
-
-            // delete original like
-            $record->delete();
-
-            // create like on new user
-            $this->add($elementId, $userIdToTransferContentTo);
-        }
-
-        return true;
-    }
-
-    public function deleteLikesByUserId($userId)
-    {
-        $records = LikeRecord::findAll([
-            'userId' => $userId
-        ]);
-
-        foreach ($records as $record) {
-            $like = LikeModel::populateModel($record);
-
-            // delete like
-            $record->delete();
-
-            $this->onRemoveLike($like);
-        }
-
-        return true;
-    }
-
+    /**
+     * Remove a Like from the database matching the supplied $elementId and $userId
+     *
+     * @param mixed $elementId
+     * @param mixed $userId
+     * @return boolean
+     */
     public function remove($elementId, $userId)
     {
         $params = [
@@ -154,6 +135,12 @@ class LikeService extends Component
         return true;
     }
 
+    /**
+     * Return a LikeModel for a Like matching the supplied $id
+     *
+     * @param mixed $id
+     * @return mixed LikeModel
+     */
     public function getLikeById($id)
     {
         $params = [
@@ -167,6 +154,12 @@ class LikeService extends Component
         }
     }
 
+    /**
+     * Return an array of LikeModels for Likes matching the supplied $elementId
+     *
+     * @param mixed $elementId
+     * @return array of LikeModels
+     */
     public function getLikesByElementId($elementId)
     {
         $records = LikeRecord::findAll([
@@ -176,6 +169,13 @@ class LikeService extends Component
         return LikeModel::populateModels($records);
     }
 
+    /**
+     * Return either an array of LikeModels for Likes matching the supplied $elementId
+     * or an array of all Likes.
+     *
+     * @param mixed $elementId (optional)
+     * @return array
+     */
     public function getLikes($elementId = null)
     {
         if ($elementId) {
@@ -184,14 +184,14 @@ class LikeService extends Component
             $likes = [];
 
             // It'd be nice to use the model, but grouping seems to be problematic
-            // $records = LikeRecord::model()->findAll(array(
+            // $records = LikeRecord::findAll(array(
             //     'select' => 'COUNT(elementId) AS count, elementId',
             //     'group' => 'elementId'
             // ));
             $records = (new Query())
                 ->select('COUNT(elementId) AS count, elementId')
                 ->from('likes')
-                ->group('elementId')
+                ->groupBy('elementId')
                 ->orderBy('count DESC')
                 ->all();
 
@@ -211,6 +211,12 @@ class LikeService extends Component
         }
     }
 
+    /**
+     * Return an array of LikeModels for Likes matching the supplied $userId
+     *
+     * @param mixed $userId
+     * @return array of LikeModels
+     */
     public function getLikesByUserId($userId)
     {
         $records = LikeRecord::findAll([
@@ -220,10 +226,17 @@ class LikeService extends Component
         return LikeModel::populateModels($records);
     }
 
+    /**
+     * Return an array of Likes matching the $userId (if supplied)
+     * or for the current logged-in user.
+     *
+     * @param [type] $elementType
+     * @param [type] $userId
+     * @return void
+     */
     public function getUserLikes($elementType = null, $userId = null)
     {
         $likes = [];
-
         $userId = $userId  ?? Craft::$app->getUser()->id;
 
         if (!$userId) {
@@ -236,13 +249,12 @@ class LikeService extends Component
         ]);
 
         foreach ($records as $record) {
-
-            $element = Craft::$app->getElements()->getElementById($record->elementId, $elementType);
+            $element = Craft::$app->getElements()->getElementById($record->elementId);
 
             if ($element) {
                 // We're interested in the date the like was created, rather than the date
                 // the element was created
-                $element->dateCreated = $record->dateCreated;
+                $element->dateCreated = DateTimeHelper::toDateTime($record->dateCreated);
                 array_push($likes, $element);
             }
         }
@@ -250,6 +262,12 @@ class LikeService extends Component
         return $likes;
     }
 
+    /**
+     * Return a boolean indicating whether the supplied $elementId is a Like
+     *
+     * @param mixed $elementId
+     * @return boolean
+     */
     public function isLike($elementId)
     {
         $userId = Craft::$app->getUser()->id;
@@ -272,6 +290,62 @@ class LikeService extends Component
         return false;
     }
 
+    /**
+     * Transfer likes from $userId to $userIdToTransferContentTo
+     *
+     * @param mixed $userId
+     * @param mixed $userIdToTransferContentTo
+     * @return boolean
+     */
+    public function transferLikesByUserId($userId, $userIdToTransferContentTo)
+    {
+        $records = LikeRecord::findAll([
+            'userId' => $userId
+        ]);
+
+        foreach ($records as $record) {
+            $elementId = $record->elementId;
+
+            // delete original like
+            $record->delete();
+
+            // create like on new user
+            $this->add($elementId, $userIdToTransferContentTo);
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete Likes from the database matching the supplied $userId
+     *
+     * @param mixed $userId
+     * @return boolean
+     */
+    public function deleteLikesByUserId($userId)
+    {
+        $records = LikeRecord::findAll([
+            'userId' => $userId
+        ]);
+
+        foreach ($records as $record) {
+            $like = LikeModel::populateModel($record);
+
+            // delete like
+            $record->delete();
+
+            $this->onRemoveLike($like);
+        }
+
+        return true;
+    }
+
+    /**
+     * Trigger an event indicating the addition of a Like
+     *
+     * @param LikeModel $model
+     * @return void
+     */
     public function onAddLike(LikeModel $model)
     {
         $event = new LikeEvent([
@@ -283,6 +357,12 @@ class LikeService extends Component
         $this->trigger(self::EVENT_ON_ADD_LIKE, $event);
     }
 
+    /**
+     * Trigger an event indicating the removal of a Like
+     *
+     * @param LikeModel $model
+     * @return void
+     */
     public function onRemoveLike(LikeModel $model)
     {
         $event = new LikeEvent([

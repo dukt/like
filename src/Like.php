@@ -22,7 +22,7 @@ use Craft;
 use craft\base\Plugin;
 use craft\services\Plugins;
 use craft\elements\User;
-use craft\base\Element;
+use craft\services\Elements;
 use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
@@ -72,21 +72,15 @@ class Like extends Plugin
             'likeService' => LikeService::class,
         ]);
 
-        // Event::on(
-        //     UrlManager::class,
-        //     UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-        //     function (RegisterUrlRulesEvent $event) {
-        //         $event->rules['siteActionTrigger1'] = 'like/default';
-        //     }
-        // );
-
-        // Event::on(
-        //     UrlManager::class,
-        //     UrlManager::EVENT_REGISTER_CP_URL_RULES,
-        //     function (RegisterUrlRulesEvent $event) {
-        //         $event->rules['cpActionTrigger1'] = 'like/default/do-something';
-        //     }
-        // );
+        // register the actions
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['like/add/<elementId:\d+>'] = 'like/default/add';
+                $event->rules['like/remove/<elementId:\d+>'] = 'like/default/remove';
+            }
+        );
 
         Event::on(
             CraftVariable::class,
@@ -124,8 +118,8 @@ class Like extends Plugin
         );
 
         Event::on(
-            Element::class,
-            Element::EVENT_BEFORE_DELETE_ELEMENT,
+            Elements::class,
+            Elements::EVENT_BEFORE_DELETE_ELEMENT,
             function (Event $event) {
                 $element = $event->element;
                 $likes = LikeService::getLikesByElementId($element->id);
@@ -162,17 +156,17 @@ class Like extends Plugin
      */
     protected function settingsHtml(): string
     {
-        $likes = LikeService::getLikes();
+        $likes = $this->likeService->getLikes();
 
         return Craft::$app->view->renderTemplate('like/table', [
-            'label' => Craft::t('Pages that have been liked'),
-            'instructions' => Craft::t('All columns are sortable by clicking the column heading'),
+            'label' => Craft::t('like', 'Pages that have been liked'),
+            'instructions' => Craft::t('like', 'All columns are sortable by clicking the column heading'),
             'id' => 'likes',
             'name' => 'likes',
             'cols' => array(
-                'title' => array('heading' => Craft::t('Page title'), 'type' => 'multiline'),
-                'uri' => array('heading' => Craft::t('URL'), 'type' => 'singleline', 'width' => '50%'),
-                'count' => array('heading' => Craft::t('Likes'), 'type' => 'singleline', 'width' => '10%'),
+                'title' => array('heading' => Craft::t('like', 'Page title'), 'type' => 'multiline'),
+                'uri' => array('heading' => Craft::t('like', 'URL'), 'type' => 'singleline', 'width' => '50%'),
+                'count' => array('heading' => Craft::t('like', 'Likes'), 'type' => 'singleline', 'width' => '10%'),
             ),
             'rows' => $likes
         ]);

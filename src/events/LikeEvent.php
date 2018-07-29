@@ -1,11 +1,15 @@
 <?php
+
 /**
- * Like plugin for Craft CMS 3.x
+ * Craft Like plugin for Craft CMS 3.x
  *
  * A simple plugin to connect to Like's API.
  *
- * @link      https://github.com/benjamindavid
- * @copyright Copyright (c) 2018 Benjamin David
+ * @package   Craft Like
+ * @author    Benjamin David
+ * @copyright Copyright (c) 2015, Dukt
+ * @link      https://dukt.net/craft/like/
+ * @license   https://dukt.net/craft/like/docs/license
  */
 
 namespace dukt\like\events;
