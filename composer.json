@@ -1,5 +1,5 @@
 {
-    "name": "dukt/craft-like",
+    "name": "dukt/like",
     "description": "Like plugin for Craft CMS",
     "type": "craft-plugin",
     "version": "1.0.0",
