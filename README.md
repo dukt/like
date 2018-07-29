@@ -1,4 +1,3 @@
-=======
 # Like plugin for Craft CMS 3.x
 
 A simple plugin to connect to Like's API.
