@@ -122,10 +122,10 @@ class Like extends Plugin
             Elements::EVENT_BEFORE_DELETE_ELEMENT,
             function (Event $event) {
                 $element = $event->element;
-                $likes = LikeService::getLikesByElementId($element->id);
+                $likes = $this->likeService->getLikesByElementId($element->id);
 
                 foreach ($likes as $like) {
-                    LikeService::deleteLikeById($like->id);
+                    $this->likeService->deleteLikeById($like->id);
                 }
             }
         );
