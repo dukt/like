@@ -107,12 +107,13 @@ class Like extends Plugin
             function (Event $event) {
                 $user = $event->sender;
                 $userId = $user->id;
-                $userIdToTransferContentTo = $event->transferContentTo;
+
+                $userIdToTransferContentTo = $event->transferContentTo ?? null;
 
                 if ($userIdToTransferContentTo) {
-                    LikeService::transferLikesByUserId($userId, $userIdToTransferContentTo);
+                    $this->likeService->transferLikesByUserId($userId, $userIdToTransferContentTo);
                 } else {
-                    LikeService::deleteLikesByUserId($userId);
+                    $this->likeService->deleteLikesByUserId($userId);
                 }
             }
         );
