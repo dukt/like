@@ -13,6 +13,7 @@ A simple plugin to connect to Like's API.
 
 
 ## Templating
+this was empty 
 
 
 ### Like button
