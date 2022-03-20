@@ -12,7 +12,7 @@
  * @license   https://dukt.net/craft/like/docs/license
  */
 
-namespace dukt\like\assetbundles\Like;
+namespace dukt\like\assetbundles\like;
 
 use Craft;
 use craft\web\AssetBundle;
