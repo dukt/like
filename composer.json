@@ -2,7 +2,7 @@
     "name": "dukt/like",
     "description": "Like plugin for Craft CMS",
     "type": "craft-plugin",
-    "version": "2.0.2",
+    "version": "3.0.0",
     "keywords": [
         "craft",
         "cms",
@@ -22,7 +22,8 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0-RC1"
+        "craftcms/cms": "^4.0.0-alpha.1",
+        "php": "^8.0.2"
     },
     "autoload": {
         "psr-4": {
@@ -39,5 +40,16 @@
             "likeService": "dukt\\like\\services\\LikeService"
         },
         "class": "dukt\\like\\Like"
+    },
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "craftcms/rector": "dev-main"
     }
 }

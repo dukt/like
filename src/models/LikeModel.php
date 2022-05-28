@@ -43,7 +43,7 @@ class LikeModel extends BaseModel
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['id', 'userId', 'elementId'], 'string'],
